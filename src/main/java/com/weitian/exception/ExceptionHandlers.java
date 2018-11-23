@@ -1,5 +1,6 @@
 package com.weitian.exception;
 
+import com.weitian.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,6 +10,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2018/11/22.
@@ -25,17 +28,22 @@ public class ExceptionHandlers implements HandlerExceptionResolver{
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
 
-        //与前端
+        ModelAndView mv=null;
+        Map<String,Object> errorMap=new HashMap<>(  );
 
         if(this.isJson( request )){
-            if(ex instanceof ResultException){
-                log.error("request json error info:{0},url:{1},error code:{2}", ((ResultException) ex).getMsg(),request.getRequestURL().toString(),((ResultException) ex).getCode() );
-            }else{
+//            if(ex instanceof ResultException){
+            log.error("request json error info:{},url:{},error code:{}", ((ResultException) ex).getMsg(),request.getRequestURL().toString(),((ResultException) ex).getCode() );
+            errorMap.put("exception",ResultVO.fail( ((ResultException) ex).getMsg() ));
+            mv=new ModelAndView( "jsonView",errorMap );
 
-            }
         }else{
 
+            log.error("request page error info:{},url:{}",ex.getMessage(),request.getRequestURL().toString());
+            errorMap.put("exception",ResultVO.fail( ex.getMessage()));
+
+            mv=new ModelAndView( "pageView",errorMap );
         }
-        return null;
+       return mv;
     }
 }
