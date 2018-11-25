@@ -27,11 +27,6 @@ public class SysDeptServiceImpl implements SysDeptService {
     @Override
     public SysDept save(SysDeptDto deptDto) {
         SysDept deptParent=this.findOne( deptDto.getParentId() );
-        //上级部门是否存在
-        if(null==deptParent){
-            log.error( "【部门异常】,msg={},code=",ResultEnum.PARENTDEPT_NOT_EXIST.getMsg(),ResultEnum.PARENTDEPT_NOT_EXIST.getCode() );
-            throw new ResultException( ResultEnum.PARENTDEPT_NOT_EXIST );
-        }
         // 检查部门名称是否重复
         if(null!=this.findByParentIdAndName( deptDto.getParentId(),deptDto.getName() )){
             log.error( "【部门异常】,msg={},code={}",ResultEnum.DEPARMENTNAME_IS_EXISTS.getMsg(),ResultEnum.DEPARMENTNAME_IS_EXISTS.getCode() );

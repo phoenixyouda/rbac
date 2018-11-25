@@ -11,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -26,12 +27,12 @@ public class SysDeptController {
     private SysDeptService deptService;
 
     @RequestMapping("/save")
-    public SysDept save(@Valid DeptForm form , BindingResult bindingResult){
+    public SysDept save(@Valid DeptForm deptForm , BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             throw new ResultException( ResultEnum.PARAM_IS_ERROR );
         }
         SysDeptDto deptDto=new SysDeptDto();
-        BeanUtils.copyProperties( form,deptDto );
+        BeanUtils.copyProperties( deptForm,deptDto );
         return deptService.save( deptDto );
 
     }

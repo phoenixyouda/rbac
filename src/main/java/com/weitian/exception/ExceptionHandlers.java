@@ -40,6 +40,7 @@ public class ExceptionHandlers implements HandlerExceptionResolver{
         }else{
 
             log.error("request page error info:{},url:{}",ex.getMessage(),request.getRequestURL().toString());
+            ex.printStackTrace();
             errorMap.put("exception",ResultVO.fail( ex.getMessage()));
 
             mv=new ModelAndView( "pageView",errorMap );
