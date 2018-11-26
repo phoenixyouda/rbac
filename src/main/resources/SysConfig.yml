@@ -1,0 +1,5 @@
+##根部门level
+spring:
+ sysConfig:
+  deptRoot: 0
+  separator: .

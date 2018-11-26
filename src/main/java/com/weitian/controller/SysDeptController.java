@@ -6,6 +6,7 @@ import com.weitian.enums.ResultEnum;
 import com.weitian.exception.ResultException;
 import com.weitian.form.DeptForm;
 import com.weitian.service.SysDeptService;
+import com.weitian.utils.TreeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * Created by Administrator on 2018/11/25 0025.
@@ -35,5 +37,11 @@ public class SysDeptController {
         BeanUtils.copyProperties( deptForm,deptDto );
         return deptService.save( deptDto );
 
+    }
+    @RequestMapping("/query")
+    public List<SysDeptDto> queryAll(){
+        List<SysDept> deptList=deptService.findAllDept();
+        List<SysDeptDto> deptDtoList= TreeUtils.findAll( deptList );
+        return deptDtoList;
     }
 }

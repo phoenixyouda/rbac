@@ -19,15 +19,11 @@ import java.util.List;
 public class DeptForm {
     @NotEmpty(message = "部门名称不得为空")
     private String name;
-    @NotNull(message="父部门不得为空")
-    private Integer parentId;
-
+    private Integer parentId=0;
     private String level;
-    private Integer sort;
-    private String remark;
-    private String operator;
+    private Integer sort=0;
+    private String remark="";
+    private String operator="";
     private Date operatorTime;
-    private String operatorIP;
-
-
+    private String operatorIP="";
 }
