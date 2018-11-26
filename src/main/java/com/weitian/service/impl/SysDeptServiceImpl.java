@@ -1,5 +1,6 @@
 package com.weitian.service.impl;
 
+import com.weitian.config.SysConfig;
 import com.weitian.dto.SysDeptDto;
 import com.weitian.entity.SysDept;
 import com.weitian.enums.ResultEnum;
@@ -24,6 +25,7 @@ import java.util.List;
 public class SysDeptServiceImpl implements SysDeptService {
     @Autowired
     private SysDeptRepository deptRepository;
+
     @Override
     public SysDept findOne(Integer id) {
         return deptRepository.findOne( id );
@@ -54,6 +56,12 @@ public class SysDeptServiceImpl implements SysDeptService {
     @Override
     public SysDept save(SysDeptDto deptDto) {
 
+        //父部门不存在则设置为0
+        if(null==deptDto.getParentId()){
+            deptDto.setParentId( SysConfig.deptRootId);
+        }
+
+        //生成部门level 规则：父部门level.父部门id
         deptDto.setLevel( LevelUtil.getLevel( deptDto.getParentId(),deptDto.getLevel() ) );
 
         SysDept deptParent=this.findOne( deptDto.getParentId() );

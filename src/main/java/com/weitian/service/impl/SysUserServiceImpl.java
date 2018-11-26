@@ -17,6 +17,7 @@ public class SysUserServiceImpl implements SysUserService {
     private SysUserRepository userRepository;
     public SysUser findById(Integer id){
         if(id==null) {
+
             throw new ResultException( ResultEnum.REQUESTDATA_NOT_EXIST );
         }
         return userRepository.findOne( id );

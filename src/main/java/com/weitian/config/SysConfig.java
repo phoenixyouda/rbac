@@ -1,6 +1,5 @@
 package com.weitian.config;
 
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
@@ -14,13 +13,19 @@ import org.springframework.stereotype.Component;
 @PropertySource( "classpath:SysConfig.yml" )
 public class SysConfig {
 
-    public static String deptRoot;
+    public static String deptRootLevel;
 
+    public static Integer deptRootId;
     public static String separator;
 
-    @Value( "${deptRoot}" )
-    public void setDeptRoot(String deptRoot){
-        SysConfig.deptRoot=deptRoot;
+    @Value("${deptRootId}")
+    public void setDeptRootId(Integer deptRootId) {
+        SysConfig.deptRootId = deptRootId;
+    }
+
+    @Value( "${deptRootLevel}" )
+    public void setDeptRootLevel(String deptRoot){
+        SysConfig.deptRootLevel=deptRoot;
     }
     @Value( "${separator}" )
     public void setSeparator(String separator) {

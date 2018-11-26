@@ -1,5 +1,6 @@
 ##根部门level
 spring:
  sysConfig:
-  deptRoot: 0
+  deptRootLevel: 0
+  deptRootId: 0
   separator: .

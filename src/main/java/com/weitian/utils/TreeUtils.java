@@ -18,11 +18,11 @@ public class TreeUtils {
 
         for(SysDept sysDept:deptList){
             deptLevelMap.put( sysDept.getLevel(),SysDept2SysDeptDtoConverter.convert(sysDept));
-            if(SysConfig.deptRoot.equals(sysDept.getLevel())){
+            if(SysConfig.deptRootLevel.equals(sysDept.getLevel())){
                 sysDeptDtoList.add( SysDept2SysDeptDtoConverter.convert(sysDept) );
             }
         }
-        deptTree(sysDeptDtoList,SysConfig.deptRoot,deptLevelMap);
+        deptTree(sysDeptDtoList,SysConfig.deptRootLevel,deptLevelMap);
         return sysDeptDtoList;
     }
 

@@ -17,7 +17,7 @@ import org.springframework.util.StringUtils;
 public class LevelUtil {
     public static String getLevel(Integer parentId,String parentLevel){
         if(StringUtils.isEmpty(parentLevel)){
-            return SysConfig.deptRoot;
+            return SysConfig.deptRootLevel;
         }else{
             return parentLevel+SysConfig.separator+parentId;
         }

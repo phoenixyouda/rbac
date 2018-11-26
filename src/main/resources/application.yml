@@ -33,11 +33,11 @@ spring:
   jpa:
     database: mysql
     show-sql: true
+  freemarker:
+    request-context-attribute: request
 
-  mvc:
-    view:
-      prefix: /pages/
-      suffix: .jsp
+
+
 
 
 
