@@ -6,7 +6,6 @@ import com.weitian.enums.ResultEnum;
 import com.weitian.exception.ResultException;
 import com.weitian.repository.SysDeptRepository;
 import com.weitian.service.SysDeptService;
-import com.weitian.utils.SysDeptDto2SysDeptConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

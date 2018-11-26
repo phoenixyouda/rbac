@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://161.9.0.208:3306/rbac?characterEncoding=utf-8
+    url: jdbc:mysql://192.168.1.112:3306/rbac?characterEncoding=utf-8
     username: root
-    password: root
+    password: 123456
     platform: mysql
     type: com.alibaba.druid.pool.DruidDataSource
     # 下面为连接池的补充设置，应用到上面所有数据源中
