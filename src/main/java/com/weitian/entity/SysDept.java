@@ -23,7 +23,7 @@ public class SysDept {
     @Column(name="name")
     private String name;
     @Column(name="level")
-    private String level;
+    private String deptLevel;
     @Column(name="parent_id")
     private Integer parentId;
     @Column(name="sort")

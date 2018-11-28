@@ -1,19 +1,25 @@
 package com.weitian.service.impl;
 
+import com.google.j2objc.annotations.AutoreleasePool;
 import com.weitian.config.SysConfig;
 import com.weitian.dto.SysDeptDto;
 import com.weitian.entity.SysDept;
+import com.weitian.enums.LogEnum;
 import com.weitian.enums.ResultEnum;
 import com.weitian.exception.ResultException;
 import com.weitian.repository.SysDeptRepository;
 import com.weitian.service.SysDeptService;
+import com.weitian.service.SysLogService;
 import com.weitian.utils.LevelUtil;
-import com.weitian.utils.SysDept2SysDeptDtoConverter;
+import com.weitian.utils.SysDept2SysLogConvert;
 import com.weitian.utils.SysDeptDto2SysDeptConverter;
+import com.weitian.utils.SysUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,15 +31,44 @@ import java.util.List;
 public class SysDeptServiceImpl implements SysDeptService {
     @Autowired
     private SysDeptRepository deptRepository;
-
+    @Autowired
+    private SysLogService logService;
+    /**
+     * 根据主键查询部门信息
+     * @param id
+     * @return
+     */
     @Override
     public SysDept findOne(Integer id) {
         return deptRepository.findOne( id );
     }
 
+
+    /**
+     *
+     * @param deptDto
+     * @return
+     */
     @Override
-    public String getDeptLevelByParentId(Integer parentId) {
-        return null;
+    @Transactional
+    public SysDept update(SysDeptDto deptDto) {
+
+        SysDept oldDept=this.findOne( deptDto.getId() );
+
+        SysDept newDept=new SysDept();
+        BeanUtils.copyProperties( oldDept,newDept );
+        newDept.setName( deptDto.getName() );
+        newDept.setOperator( SysUtils.getSessionUserName() );
+        newDept.setOperatorIP( SysUtils.getSessionUserIp() );
+        SysDept updateDept=deptRepository.save( newDept );
+        if(null==updateDept){
+            log.error( "【部门更新异常】,message={},code={}",ResultEnum.DEPARTMENT_UPDATE_ERROR.getMsg(),ResultEnum.DEPARTMENT_UPDATE_ERROR.getCode() );
+            throw new ResultException( ResultEnum.DEPARTMENT_UPDATE_ERROR );
+        }else{
+            //更新日志
+            logService.save( SysDept2SysLogConvert.convert( oldDept,newDept,LogEnum.OPERATOR_UPDATE.getOperatorCode() ) );
+        }
+        return updateDept;
     }
 
     /**
@@ -42,7 +77,8 @@ public class SysDeptServiceImpl implements SysDeptService {
      */
     @Override
     public List<SysDept> findAllDept() {
-        return deptRepository.findAll();
+        Sort sort=new Sort( Sort.Direction.ASC,"sort");
+        return deptRepository.findAll(sort);
     }
 
 
@@ -54,6 +90,7 @@ public class SysDeptServiceImpl implements SysDeptService {
      * @return
      */
     @Override
+    @Transactional
     public SysDept save(SysDeptDto deptDto) {
 
         //父部门不存在则设置为0
@@ -62,7 +99,7 @@ public class SysDeptServiceImpl implements SysDeptService {
         }
 
         //生成部门level 规则：父部门level.父部门id
-        deptDto.setLevel( LevelUtil.getLevel( deptDto.getParentId(),deptDto.getLevel() ) );
+        deptDto.setDeptLevel( LevelUtil.getLevel( deptDto.getParentId(),deptDto.getDeptLevel() ) );
 
         SysDept deptParent=this.findOne( deptDto.getParentId() );
 
@@ -79,6 +116,13 @@ public class SysDeptServiceImpl implements SysDeptService {
         sysDept.setOperator( "user" );  //TODO
         sysDept.setOperatorIP( "127.0.0.1" );//TODO
         sysDept=deptRepository.save( sysDept);
+        if(null==sysDept){
+            log.error( "【部门异常】,msg={},code={} ",ResultEnum.DEPARTMENT_INSERT_ERROR.getMsg(),ResultEnum.DEPARTMENT_INSERT_ERROR.getCode());
+            throw new ResultException( ResultEnum.DEPARTMENT_INSERT_ERROR );
+        }else{
+            /*同步更新日志*/
+            logService.save( SysDept2SysLogConvert.convert( sysDept,null, LogEnum.OPERATOR_SAVE.getOperatorCode() ) );
+        }
         return sysDept;
     }
 

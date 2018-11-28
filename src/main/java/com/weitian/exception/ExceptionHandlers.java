@@ -33,8 +33,8 @@ public class ExceptionHandlers implements HandlerExceptionResolver{
 
         if(this.isJson( request )){
 //            if(ex instanceof ResultException){
-            log.error("request json error info:{},url:{},error code:{}", ((ResultException) ex).getMsg(),request.getRequestURL().toString(),((ResultException) ex).getCode() );
-            errorMap.put("exception",ResultVO.fail( ((ResultException) ex).getMsg() ));
+            log.error("request json error info:{},url:{},error code:{}", ex.getMessage(),request.getRequestURL().toString(),((ResultException) ex).getCode() );
+            errorMap.put("exception",ResultVO.fail(ex.getMessage()));
             mv=new ModelAndView( "jsonView",errorMap );
 
         }else{

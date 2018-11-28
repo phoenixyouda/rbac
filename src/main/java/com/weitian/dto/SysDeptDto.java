@@ -10,5 +10,9 @@ import java.util.List;
  */
 @Data
 public class SysDeptDto extends SysDept {
-    private List<SysDeptDto> childDeptList;
+
+    //children固定命名，配合前台ztree“children”属性
+    private List<SysDeptDto> children;
+    //层级是否默认打开
+    private boolean open;
 }

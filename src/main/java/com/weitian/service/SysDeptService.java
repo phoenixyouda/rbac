@@ -12,6 +12,7 @@ public interface SysDeptService {
     public SysDept  save(SysDeptDto deptDto);
     public SysDept findOne(Integer id);
     public SysDept findByParentIdAndName(Integer parentId,String name);
-    public String getDeptLevelByParentId(Integer parentId);
     public List<SysDept> findAllDept();
+    public SysDept update(SysDeptDto deptDto);
+
 }

@@ -18,6 +18,11 @@ public enum ResultEnum {
     /*部门异常*/
     PARENTDEPT_NOT_EXIST(300,"父部门不存在"),
     DEPARMENTNAME_IS_EXISTS(301,"部门名称重复"),
+    DEPARTMENT_INSERT_ERROR(302,"部门新增失败"),
+    DEPARTMENT_UPDATE_ERROR(303,"部门更新失败"),
+
+    /*操作日志异常*/
+    OPERATOR_LOG_ERROR(900,"操作日志新增失败"),
     ;
     private Integer code;
     private String msg;

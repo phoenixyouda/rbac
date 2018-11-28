@@ -1,5 +1,6 @@
 package com.weitian.form;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.weitian.entity.SysUser;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -18,11 +19,24 @@ import java.util.List;
 @Data
 public class DeptForm {
     @NotEmpty(message = "部门名称不得为空")
+    @JsonProperty(value = "deptName")
     private String name;
+
+    @JsonProperty(value="deptId")
+    private Integer id;
+
     private Integer parentId=0;
-    private String level;
+
+    @JsonProperty(value="deptLevel")
+    private String deptLevel;
+
+
     private Integer sort=0;
+
+    @JsonProperty(value="deptRemark")
     private String remark="";
+
+
     private String operator="";
     private Date operatorTime;
     private String operatorIP="";

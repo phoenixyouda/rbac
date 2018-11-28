@@ -8,11 +8,10 @@ import lombok.Data;
 @Data
 public class ResultException extends  RuntimeException {
     private Integer code;
-    private String msg;
 
     public ResultException(ResultEnum resultEnum){
+        super(resultEnum.getMsg());
         this.code=resultEnum.getCode();
-        this.msg=resultEnum.getMsg();
     }
 
 }

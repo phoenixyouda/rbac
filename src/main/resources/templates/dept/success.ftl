@@ -1,5 +1,5 @@
 <html>
-<#include "head.ftl"/>
+
 <body>
 <div class="container">
     <div class="row clearfix">

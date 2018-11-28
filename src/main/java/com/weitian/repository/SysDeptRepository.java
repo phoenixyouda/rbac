@@ -10,8 +10,4 @@ import java.util.List;
  */
 public interface SysDeptRepository extends JpaRepository<SysDept,Integer> {
     public SysDept findByParentIdAndName(Integer parentId,String name);
-
-    public List<SysDept> findAllByParentIdEquals(Integer parentId);
-
-
 }

@@ -142,6 +142,7 @@ create table sys_log(
 	`old_value` varchar(512) not null default '' comment '原始值',
 	`new_value` varchar(512) not null default '' comment '新值',
 	`status` int not null default '0' comment '操作状态 0 :未还原 1：已还原',
+	`updateType` int not null DEFAULT '0' comment '操作类型 0，增加，1，修改，2，删除，3，授予，4，撤销',
 	`operator` varchar(16) DEFAULT '' COMMENT '操作者',
 	`operator_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '操作时间',
 	`operator_ip` varchar(32) NOT NULL DEFAULT '' COMMENT '操作IP',

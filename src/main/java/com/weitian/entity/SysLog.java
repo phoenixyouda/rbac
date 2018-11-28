@@ -28,6 +28,8 @@ public class SysLog {
     private String newValue;
     @Column(name="status")
     private Integer status;
+    @Column(name="update_type")
+    private Integer updateType;
     @Column(name="operator")
     private String operator;
     @Column(name="operator_time")
