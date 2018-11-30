@@ -1,9 +1,11 @@
 package com.weitian.service.impl;
 
-import com.google.j2objc.annotations.AutoreleasePool;
 import com.weitian.config.SysConfig;
+import com.weitian.convert.SysDeptConverter;
+import com.weitian.convert.SysLogConvert;
 import com.weitian.dto.SysDeptDto;
 import com.weitian.entity.SysDept;
+import com.weitian.entity.SysUser;
 import com.weitian.enums.LogEnum;
 import com.weitian.enums.ResultEnum;
 import com.weitian.exception.ResultException;
@@ -11,8 +13,6 @@ import com.weitian.repository.SysDeptRepository;
 import com.weitian.service.SysDeptService;
 import com.weitian.service.SysLogService;
 import com.weitian.utils.LevelUtil;
-import com.weitian.utils.SysDept2SysLogConvert;
-import com.weitian.utils.SysDeptDto2SysDeptConverter;
 import com.weitian.utils.SysUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,9 +44,42 @@ public class SysDeptServiceImpl implements SysDeptService {
         return deptRepository.findOne( id );
     }
 
+    /**
+     * 删除
+     * @param id
+     * @return
+     */
+    @Override
+    @Transactional
+    public void delete(Integer id) {
+
+        //查询部门是否存在
+        SysDept sysDept=this.findOne( id );
+        if(null==sysDept){
+            log.error( "【删除部门失败】,msg={},code={}",ResultEnum.DEPARTMENT_NOT_EXIST.getMsg(),ResultEnum.DEPARTMENT_NOT_EXIST.getCode() );
+            throw new ResultException( ResultEnum.DEPARTMENT_NOT_EXIST );
+        }
+        //查询是否包含子部门
+        List<SysDept> sysDeptList=deptRepository.findByParentId( id );
+        if(sysDeptList.size()>0){
+            log.error( "【删除部门失败】,msg={},code={}",ResultEnum.DEPARTMENT_CONTAINS_CHILDDEPTS.getMsg(),ResultEnum.DEPARTMENT_CONTAINS_CHILDDEPTS.getCode());
+            throw new ResultException( ResultEnum.DEPARTMENT_CONTAINS_CHILDDEPTS );
+        }
+        //部门中是否有人员存在
+        List<SysUser> userList=sysDept.getSysUserList();
+        if(userList.size()>0){
+            log.error( "【删除部门失败】,msg={},code={}",ResultEnum.DEPARTMENT_CONTAINS_USERS.getMsg(),ResultEnum.DEPARTMENT_CONTAINS_USERS.getCode());
+            throw new ResultException( ResultEnum.DEPARTMENT_CONTAINS_USERS );
+        }
+        //无人，可删
+        deptRepository.delete( sysDept );
+
+        logService.save( SysLogConvert.convertForCD( sysDept.getId(),SysUtils.getJsonByObject(sysDept ),LogEnum.DEPARTMENT_TABLE.getTableCode(),LogEnum.OPERATOR_DELETE.getOperatorCode() ) );
+
+    }
 
     /**
-     *
+     * 更新
      * @param deptDto
      * @return
      */
@@ -55,18 +89,22 @@ public class SysDeptServiceImpl implements SysDeptService {
 
         SysDept oldDept=this.findOne( deptDto.getId() );
 
+
+        String oldValue=SysUtils.getJsonByObject( oldDept );
         SysDept newDept=new SysDept();
         BeanUtils.copyProperties( oldDept,newDept );
         newDept.setName( deptDto.getName() );
         newDept.setOperator( SysUtils.getSessionUserName() );
         newDept.setOperatorIP( SysUtils.getSessionUserIp() );
+        newDept.setOperatorTime( new Date(  ) );
         SysDept updateDept=deptRepository.save( newDept );
+        String newValue=SysUtils.getJsonByObject( updateDept );
         if(null==updateDept){
             log.error( "【部门更新异常】,message={},code={}",ResultEnum.DEPARTMENT_UPDATE_ERROR.getMsg(),ResultEnum.DEPARTMENT_UPDATE_ERROR.getCode() );
             throw new ResultException( ResultEnum.DEPARTMENT_UPDATE_ERROR );
         }else{
             //更新日志
-            logService.save( SysDept2SysLogConvert.convert( oldDept,newDept,LogEnum.OPERATOR_UPDATE.getOperatorCode() ) );
+            logService.save( SysLogConvert.convertForUpdate( updateDept.getId(),oldValue,newValue,LogEnum.DEPARTMENT_TABLE.getTableCode() ));
         }
         return updateDept;
     }
@@ -111,17 +149,18 @@ public class SysDeptServiceImpl implements SysDeptService {
             }
         }
 
-        SysDept sysDept=SysDeptDto2SysDeptConverter.convert( deptDto );
+        SysDept sysDept= SysDeptConverter.convert( deptDto );
         //保存
-        sysDept.setOperator( "user" );  //TODO
-        sysDept.setOperatorIP( "127.0.0.1" );//TODO
+        sysDept.setOperator( SysUtils.getSessionUserName() );
+        sysDept.setOperatorIP( SysUtils.getSessionUserIp() );
         sysDept=deptRepository.save( sysDept);
         if(null==sysDept){
             log.error( "【部门异常】,msg={},code={} ",ResultEnum.DEPARTMENT_INSERT_ERROR.getMsg(),ResultEnum.DEPARTMENT_INSERT_ERROR.getCode());
             throw new ResultException( ResultEnum.DEPARTMENT_INSERT_ERROR );
         }else{
             /*同步更新日志*/
-            logService.save( SysDept2SysLogConvert.convert( sysDept,null, LogEnum.OPERATOR_SAVE.getOperatorCode() ) );
+
+            logService.save( SysLogConvert.convertForCD( sysDept.getId(), SysUtils.getJsonByObject(sysDept),LogEnum.DEPARTMENT_TABLE.getTableCode(),LogEnum.OPERATOR_SAVE.getOperatorCode() ) );
         }
         return sysDept;
     }

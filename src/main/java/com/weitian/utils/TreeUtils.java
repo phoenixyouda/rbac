@@ -4,6 +4,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.weitian.config.SysConfig;
+import com.weitian.convert.SysDeptConverter;
 import com.weitian.dto.SysDeptDto;
 import com.weitian.entity.SysDept;
 
@@ -25,10 +26,10 @@ public class TreeUtils {
 
         for(SysDept sysDept:deptList){
             //获取所有层级与对应该层级的部门
-            deptLevelMap.put( sysDept.getDeptLevel(),SysDept2SysDeptDtoConverter.convert(sysDept));
+            deptLevelMap.put( sysDept.getDeptLevel(), SysDeptConverter.convert(sysDept));
             //确定部门根节点
             if(SysConfig.deptRootLevel.equals(sysDept.getDeptLevel())){
-                SysDeptDto sysDeptDto=SysDept2SysDeptDtoConverter.convert(sysDept);
+                SysDeptDto sysDeptDto= SysDeptConverter.convert(sysDept);
                 //设置第一级下节点默认打开状态
                 sysDeptDto.setOpen( true );
                 sysDeptDtoList.add( sysDeptDto );

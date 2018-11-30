@@ -1,9 +1,11 @@
 package com.weitian.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +18,10 @@ import java.util.List;
 @Table(name="sys_dept")
 @Data
 @DynamicUpdate
-public class SysDept {
+public class SysDept implements  Serializable {
+
+    private static final long serialVersionUID = 9193644645910210615L;
+
     @Id
     @GeneratedValue
     private Integer id;
@@ -36,6 +41,9 @@ public class SysDept {
     private Date operatorTime;
     @Column(name="operator_ip")
     private String operatorIP;
-    @OneToMany(mappedBy = "sysDept")
+
+    @JsonManagedReference
+
+    @OneToMany(mappedBy = "sysDept",fetch = FetchType.EAGER)
     private List<SysUser> sysUserList;
 }

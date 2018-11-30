@@ -36,29 +36,29 @@ public enum LogEnum {
 
     ;
     /*操作目标表: 0：未知表，不做处理 1：部门表 2：用户表 3：权限模块表 4：权限表 5：角色表 6：角色用户关系表 7 角色权限关系表*/
-    private Integer typeCode;
+    private Integer tableCode;
     private String tableName;
     /*操作状态 0 :未还原 1：已还原*/
     private Integer statusCode;
-    private String executor;
+    private String statusName;
 
     /*操作类型，0，增加，1，修改，2，删除，3，授予，4，撤销*/
     private Integer operatorCode;
-    private String operatorType;
+    private String operatorName;
 
-    LogEnum(String operatorType,Integer operatorCode,String operator){
+    LogEnum(String operatorName,Integer operatorCode,String operator){
         this.operatorCode=operatorCode;
-        this.operatorType=operatorType;
+        this.operatorName=operatorName;
     }
 
 
 
-    LogEnum(String executor,Integer status){
-        this.executor=executor;
+    LogEnum(String statusName,Integer status){
+        this.statusName=statusName;
         this.statusCode=status;
     }
-    LogEnum(Integer type, String tableName) {
-        this.typeCode = type;
+    LogEnum(Integer tableCode, String tableName) {
+        this.tableCode = tableCode;
         this.tableName = tableName;
     }
 }

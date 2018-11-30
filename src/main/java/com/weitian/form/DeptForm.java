@@ -19,21 +19,17 @@ import java.util.List;
 @Data
 public class DeptForm {
     @NotEmpty(message = "部门名称不得为空")
-    @JsonProperty(value = "deptName")
     private String name;
 
-    @JsonProperty(value="deptId")
     private Integer id;
 
     private Integer parentId=0;
 
-    @JsonProperty(value="deptLevel")
     private String deptLevel;
 
 
     private Integer sort=0;
 
-    @JsonProperty(value="deptRemark")
     private String remark="";
 
 

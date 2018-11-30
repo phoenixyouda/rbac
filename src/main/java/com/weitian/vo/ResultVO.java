@@ -21,6 +21,12 @@ public class ResultVO {
         resultVO.setData( data );
         return resultVO;
     }
+    public static ResultVO success(String msg){
+        ResultVO resultVO=new ResultVO();
+        resultVO.setRect( true );
+        resultVO.setMsg( msg );
+        return resultVO;
+    }
     public static ResultVO fail(String msg){
         ResultVO resultVO=new ResultVO();
         resultVO.setRect( false );

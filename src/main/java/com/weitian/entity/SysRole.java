@@ -1,5 +1,6 @@
 package com.weitian.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -40,6 +41,7 @@ public class SysRole {
     private Date operatorTime;
     @Column(name="operator_ip")
     private String operatorIP;
+    @JsonBackReference
     @ManyToMany(mappedBy = "sysRoleList")
     private List<SysUser> sysUserList;
     @ManyToMany(fetch = FetchType.EAGER)

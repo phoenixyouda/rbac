@@ -1,4 +1,4 @@
-package com.weitian.utils;
+package com.weitian.convert;
 
 import com.google.common.collect.Lists;
 import com.weitian.dto.SysDeptDto;
@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2018/11/26.
  */
-public class SysDept2SysDeptDtoConverter {
+public class SysDeptConverter {
     public static SysDeptDto convert(SysDept sysDept){
         SysDeptDto sysDeptDto=new SysDeptDto();
         BeanUtils.copyProperties( sysDept, sysDeptDto);
@@ -27,5 +27,11 @@ public class SysDept2SysDeptDtoConverter {
 
         }
         return sysDeptDtoList;
+    }
+
+    public static SysDept convert(SysDeptDto sysDeptDto){
+        SysDept sysDept=new SysDept();
+        BeanUtils.copyProperties( sysDeptDto,sysDept );
+        return sysDept;
     }
 }

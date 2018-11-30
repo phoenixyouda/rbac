@@ -14,5 +14,7 @@ public interface SysDeptService {
     public SysDept findByParentIdAndName(Integer parentId,String name);
     public List<SysDept> findAllDept();
     public SysDept update(SysDeptDto deptDto);
+    public void delete(Integer id);
+    
 
 }
