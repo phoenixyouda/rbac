@@ -1,6 +1,8 @@
 package com.weitian.controller;
 
+import antlr.StringUtils;
 import com.weitian.dto.SysUserDto;
+import com.weitian.entity.SysDept;
 import com.weitian.entity.SysUser;
 import com.weitian.enums.ResultEnum;
 import com.weitian.exception.ResultException;
@@ -30,27 +32,53 @@ public class SysUserController {
     @Autowired
     private SysUserService userService;
 
+
+    @RequestMapping("/queryById")
+    @ResponseBody
+    public ResultVO queryById(@RequestParam("id")Integer id){
+        if(null==id){
+            return ResultVO.fail( ResultEnum.PARAM_IS_ERROR.getMsg() );
+        }
+        SysUser sysUser=userService.findById( id );
+        return ResultVO.success( ResultEnum.SUCCESS.getMsg(),SysUserConverter.convert2UserDto( sysUser ) );
+    }
+
+    /**
+     * 删除用户
+     * @param id
+     * @return
+     */
+    @RequestMapping("/delete")
+    @ResponseBody
+    public ResultVO delete(@RequestParam("id")Integer id){
+        if(null==id){
+            return ResultVO.fail( ResultEnum.PARAM_IS_ERROR.getMsg() );
+        }
+
+        try {
+            userService.delete( id );
+            return ResultVO.success( ResultEnum.SUCCESS.getMsg() );
+        }catch(Exception ex){
+            return ResultVO.fail( ResultEnum.USER_DELETE_ERROR.getMsg() );
+        }
+    }
+
     @PostMapping("/save")
     @ResponseBody
     public ResultVO save(@Valid UserForm userForm, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            //TODO：跳转错误页面
-            //e=bindingResult.getFieldError().getDefaultMessage();
-            //map.put("error",e)
-            //map.put("url","");
-            //mv.add(map)
-            //return modelandview("error.jsp",mv)
-            //不用抛出异常，直接跳错误提示页面
-            throw new ResultException( ResultEnum.PARAM_IS_ERROR );
+            return ResultVO.fail( bindingResult.getFieldError().getDefaultMessage() );
         }
         SysUserDto userDto=SysUserConverter.convert( userForm );
         try {
-            return ResultVO.success( ResultEnum.SUCCESS.getMsg(),userService.save( userDto ));
+            if(null==userDto.getId()) {
+                return ResultVO.success( ResultEnum.SUCCESS.getMsg(), userService.save( userDto ) );
+            }else{
+                return ResultVO.success( ResultEnum.SUCCESS.getMsg(), userService.update( userDto ) );
+            }
         } catch (Exception e) {
-            //跳错误页面
+            return ResultVO.fail( ResultEnum.USER_INSERT_ERROR.getMsg() );
         }
-
-        return ResultVO.fail( ResultEnum.USER_INSERT_ERROR.getMsg() );
     }
 
     /**

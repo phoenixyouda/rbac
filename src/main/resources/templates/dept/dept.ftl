@@ -8,6 +8,7 @@
     <script language="JavaScript">
         var zTree;
         var treeData;
+
         var currPage;
         var pageSize;
         var departmentId;
@@ -25,6 +26,8 @@
             loadUsers(currPage,pageSize,departmentId);
         }
 
+
+        /*========================部门管理========================*/
         $(function() {
 
             /*显示部门树*/
@@ -83,7 +86,7 @@
                         "保存": function(e) {
                             e.preventDefault();
                             //添加用户
-                            userManager(true);
+                            userManager();
                         },
                         "取消": function () {
                             $("#dialog-user-form").dialog("close");
@@ -92,116 +95,8 @@
                 });
             });
 
+
         });
-
-
-
-        /*用户管理  true：新增  false：修改 */
-        function userManager(){
-            $.ajax({
-                url: "${request.contextPath}/sys/user/save",
-                data: $("#userForm").serializeArray(),
-                type: 'POST',
-                success: function(result) {
-
-                    if (result.rect) {
-                        console.info("data:"+result);
-                        $("#dialog-user-form").dialog("close");
-                        showMessage("员工管理",result.msg,true);
-                        loadUsers(currPage,pageSize,departmentId);
-                    }else{
-                        showMessage("部门管理",result.msg,false);
-                    }
-                }
-            })
-
-        }
-
-        /*新增部门*/
-        function save(){
-            $.ajax({
-                url: "${request.contextPath}/sys/dept/save",
-                data: $("#deptForm").serializeArray(),
-                type: 'POST',
-                success: function(result) {
-                    if (result.rect) {
-                        $("#dialog-dept-form").dialog("close");
-                        showMessage("部门管理",result.msg,true);
-                        loadDeptTree();
-                    }else{
-                        showMessage("部门管理",result.msg,false);
-                    }
-                }
-            })
-        }
-
-        /*加载用户*/
-        function loadUsers(currPage,pageSize,departmentId){
-            $.ajax({
-                url: "${request.contextPath}/sys/user/userList",
-                data: {
-                    'currPage':currPage,
-                    'pageSize':pageSize,
-                    'departmentId':departmentId
-                },
-                type: 'POST',
-                success: function(result) {
-                    if (result.rect) {
-                        var resultMap=result.data;
-                        console.info(resultMap);
-                        delRows();
-                        addRow(resultMap.list);
-
-                        show(resultMap.totalCounts,resultMap.from,resultMap.to,resultMap.currPage,resultMap.pageSize,resultMap.totalPages,departmentId);
-                        setPageParam(resultMap.currPage,resultMap.pageSize,departmentId);
-                        setDisabled(resultMap.currPage,resultMap.totalPages);
-                    }else{
-                        showMessage("用户管理",result.msg,false);
-                    }
-                }
-            })
-        }
-
-
-        //删除行
-        function delRows(){
-
-            var table = document.getElementById('dynamic-table');
-            var tbodies= $('#dynamic-table').find('tbody').find('tr');
-            for(var i=tbodies.length;i>0;i--){
-                table.deleteRow(i);
-            }
-        }
-
-
-        /*显示用户*/
-        //新增行
-        function addRow(userList){
-            for(var i=0;i<userList.length;i++) {
-
-                var str = "<tr role='row' class='user-name odd'>" +
-                        "<td><a href='#' class='user-edit'>"+userList[i].username+"</a></td>" +
-                        "<td>"+userList[i].deptName+"</td>" +
-                        "<td>"+userList[i].telephone+"</td>" +
-                        "<td>"+userList[i].mail+"</td>" +
-                        "<td>"+userList[i].statusName+"</td>" +
-                        "<td><a href='#' onclick='updateUser("+userList[i].id+")'>修改</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#' onclick='deleteUser("+userList[i].id+")'>删除</a></td>" +
-                        "</tr>";
-                $("#dynamic-table tbody").append(str);
-            }
-
-
-        }
-
-
-        function deleteUser(id){
-            console.info(id);
-        }
-
-        function updateUser(username){
-            console.info(username);
-        }
-
 
 
 
@@ -217,6 +112,7 @@
                     if(result.rect) {
                         treeData = result.data;   //把后台封装好的Json格式赋给treeNodes
                         $.fn.zTree.init($("#deptTree"), setting, treeData);
+
                     }else{
                         showMessage("加载部门列表", result.msg, false);
                     }
@@ -252,7 +148,7 @@
                 },
                 type: 'POST',
                 success: function(result) {
-                    console.info(result.rect);
+
                     if (result.rect) {
                         showMessage("部门管理",result.msg,true);
                     }else{
@@ -274,13 +170,9 @@
         被点击的节点 JSON 数据对象*/
         function zTreeOnClickRight(event, treeId, treeNode, clickFlag){
             departmentId=treeNode.id;
-           setPageParam(1,pageSize,departmentId);
+            setPageParam(1,pageSize,departmentId);
             loadUsers(currPage,pageSize,departmentId);
         }
-
-
-
-
 
         /*设置部门树*/
         var setting = {
@@ -295,8 +187,8 @@
                 editNameSelectAll: true,
                 showRemoveBtn : true,
                 showRenameBtn : true,
-                removeTitle : "remove",
-                renameTitle : "rename"
+                removeTitle : "删除",
+                renameTitle : "修改"
             },
             callback : {
                 onClick : zTreeOnClickRight,
@@ -304,7 +196,233 @@
                 onRename: zTreeOnRename,
                 onRemove: zTreeOnRemove,
             }
+
         };
+
+        //设置下拉部门tree
+        var selectTreesetting = {
+            view: {
+                dblClickExpand: true,//双击节点时，是否自动展开父节点的标识
+                showLine: true,//是否显示节点之间的连线
+                fontCss:{'color':'black','font-weight':'bold'},//字体样式函数
+                selectedMulti: false //设置是否允许同时选中多个节点
+            },
+            edit:{
+                enable: true,
+                editNameSelectAll: true,
+                showRemoveBtn : false,
+                showRenameBtn : false
+            },
+            callback : {
+                onClick : selectTreeOnClick,
+
+            }
+
+        };
+
+
+
+
+        /*新增部门*/
+        function save(){
+            $.ajax({
+                url: "${request.contextPath}/sys/dept/save",
+                data: $("#deptForm").serializeArray(),
+                type: 'POST',
+                success: function(result) {
+                    if (result.rect) {
+                        $("#dialog-dept-form").dialog("close");
+                        showMessage("部门管理",result.msg,true);
+                        loadDeptTree();
+                    }else{
+                        showMessage("部门管理",result.msg,false);
+                    }
+                }
+            })
+        }
+
+
+
+        /*========================用户管理========================*/
+
+        /*用户管理  */
+        function userManager(){
+
+            $.ajax({
+                url: "${request.contextPath}/sys/user/save",
+                data: $("#userForm").serializeArray(),
+                type: 'POST',
+                success: function(result) {
+                    if (result.rect) {
+                        $("#dialog-user-form").dialog("close");
+                        showMessage("员工管理",result.msg,true);
+                        loadUsers(currPage,pageSize,departmentId);
+                    }else{
+                        showMessage("员工管理",result.msg,false);
+                    }
+                }
+            })
+
+        }
+
+        /*加载用户*/
+        function loadUsers(currPage,pageSize,departmentId){
+            $.ajax({
+                url: "${request.contextPath}/sys/user/userList",
+                data: {
+                    'currPage':currPage,
+                    'pageSize':pageSize,
+                    'departmentId':departmentId
+                },
+                type: 'POST',
+                success: function(result) {
+                    if (result.rect) {
+                        var resultMap=result.data;
+
+                        delRows();
+                        addRow(resultMap.list);
+
+                        show(resultMap.totalCounts,resultMap.from,resultMap.to,resultMap.currPage,resultMap.pageSize,resultMap.totalPages,departmentId);
+                        setPageParam(resultMap.currPage,resultMap.pageSize,departmentId);
+                        setDisabled(resultMap.currPage,resultMap.totalPages);
+                    }else{
+                        showMessage("用户管理",result.msg,false);
+                    }
+                }
+            })
+        }
+
+
+        //删除行
+        function delRows(){
+
+            var table = document.getElementById('dynamic-table');
+            var tbodies= $('#dynamic-table').find('tbody').find('tr');
+            for(var i=tbodies.length;i>0;i--){
+                table.deleteRow(i);
+            }
+        }
+
+
+        /*显示用户*/
+        //新增行
+        function addRow(userList){
+            for(var i=0;i<userList.length;i++) {
+
+                var str = "<tr role='row' class='user-name odd'>" +
+                        "<td><a href='#' class='user-edit' onclick='showUserFrame("+userList[i].id+")'>"+userList[i].username+"</a></td>" +
+                        "<td>"+userList[i].deptName+"</td>" +
+                        "<td>"+userList[i].telephone+"</td>" +
+                        "<td>"+userList[i].mail+"</td>" +
+                        "<td>"+userList[i].statusName+"</td>" +
+                        "<td><a href='#' onclick='showUserFrame("+userList[i].id+")'>修改</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#' onclick='deleteUser("+userList[i].id+")'>删除</a></td>" +
+                        "</tr>";
+                $("#dynamic-table tbody").append(str);
+            }
+
+
+        }
+
+        function showTreeMenu(){
+            $.fn.zTree.init($("#treeDepartment"), selectTreesetting, treeData);
+            $("#menuContent").show();
+
+        }
+
+        function hideTreeMenu(){
+            $("#menuContent").hide();
+
+        }
+
+        //下拉树点击事件
+        function selectTreeOnClick(event, treeId, treeNode, clickFlag){
+            $("#deptName").val(treeNode.name);
+
+            //document.getElementById("deptName").value=treeId.name;
+            $("#deptId").val(treeNode.id);
+            hideTreeMenu();
+        };
+
+
+
+
+
+
+        function showUserFrame(id){
+            $.ajax({
+                url: "${request.contextPath}/sys/user/queryById",
+                data: {
+                    'id':id
+                },
+                type: 'POST',
+                success: function(result) {
+                    if (result.rect) {
+                        console.info(result.data);
+
+                        $("#dialog-user-form").dialog({
+                            model: true,
+                            title: "用户管理",
+                            open: function(event, ui) {
+                                $("#userForm")[0].reset();
+                                $("#deptName").val(result.data.deptName);
+                                $("#deptId").val(result.data.deptId);
+                                $("#userId").val(result.data.id);
+                                $("#username").val(result.data.username);
+                                $("#mail").val(result.data.mail);
+                                $("#telephone").val(result.data.telephone);
+                                $("#status").val(result.data.status);
+                                $("#remark").val(result.data.remark);
+
+                            },
+                            buttons : {
+                                "保存": function(e) {
+                                    e.preventDefault();
+                                    //添加用户
+                                    userManager();
+                                },
+                                "取消": function () {
+                                    $("#dialog-user-form").dialog("close");
+                                }
+                            }
+                        });
+
+                    }else{
+                        showMessage("用户管理",result.msg,false);
+                    }
+                }
+            });
+
+
+
+        }
+
+
+        /*删除用户*/
+        function deleteUser(id){
+            $.ajax({
+                url: "${request.contextPath}/sys/user/delete",
+                data: {
+                    'id':id
+                },
+                type: 'POST',
+                success: function(result) {
+                    if (result.rect) {
+                        show("用户管理",result.msg,true);
+                        loadDeptTree();
+                        loadUsers(currPage,pageSize,departmentId);
+                    }else{
+                        showMessage("用户管理",result.msg,false);
+                    }
+                }
+            })
+        }
+
+
+
+
+
+
+
 
 
 
@@ -431,8 +549,16 @@
         <table class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
             <tr>
                 <td style="width: 80px;"><label for="deptName">所在部门</label></td>
+
+
                 <td>
-                    <input  type="text" id="deptName" name="deptName" style="width: 200px;" readonly/>
+                    <input  type="text" id="deptName" name="deptName" onclick="showTreeMenu()" style="width: 170px;" readonly/>
+                    <input type="button" value="∨" onclick="showTreeMenu()">
+                    <div id="menuContent"  style="display:none; position: absolute;">
+                        <ul id="treeDepartment" class="ztree" style="margin-top: 10px;border: 1px solid #617775;background: #fefefe;width:190px;height:270px;overflow-y:scroll;overflow-x:auto;">
+                        </ul>
+                    </div>
+
                     <input  type="hidden" id="deptId" name="deptId" style="width: 200px;"/>
                 </td>
             </tr>
@@ -455,7 +581,7 @@
                     <select id="status" name="status" data-placeholder="选择状态" style="width: 150px;">
                         <option value="0">冻结</option>
                         <option value="1" selected>正常</option>
-                        <option value="2">删除</option>
+
                     </select>
                 </td>
             </tr>

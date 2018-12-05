@@ -19,6 +19,8 @@ public class SysUserConverter {
     public static SysUserDto convert(UserForm userForm){
         SysUserDto userDto=new SysUserDto();
         BeanUtils.copyProperties( userForm,userDto );
+        userDto.setId( userForm.getUserId() );
+
         return userDto;
     }
 
@@ -29,6 +31,7 @@ public class SysUserConverter {
         sysUserDto.setDeptName( sysUser.getSysDept().getName() );
 
         sysUserDto.setStatusName( SysUtils.getByCode( sysUser.getStatus(), StatusEnum.class ).getMessage() );
+        sysUserDto.setDeptId( sysUser.getSysDept().getId() );
         return sysUserDto;
     }
     public static List<SysUserDto> convert2UserDto(List<SysUser> sysUserList){

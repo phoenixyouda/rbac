@@ -33,11 +33,14 @@ public class SysDeptController {
     @RequestMapping("/del")
     @ResponseBody
     public ResultVO del(@RequestParam(name = "id",defaultValue = "-1")Integer id){
+        if(null==id){
+            return ResultVO.fail( ResultEnum.PARAM_IS_ERROR.getMsg() );
+        }
         try {
+
             deptService.delete( id );
             return ResultVO.success( ResultEnum.SUCCESS.getMsg() );
         }catch(Exception ex){
-            //TODO
             return ResultVO.fail( ex.getMessage() );
         }
 
@@ -47,40 +50,30 @@ public class SysDeptController {
     @ResponseBody
     public ResultVO update(@Valid DeptForm deptForm,BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            //TODO：跳转错误提示页面
-            throw new ResultException( ResultEnum.PARAM_IS_ERROR );
+            return ResultVO.fail( bindingResult.getFieldError().getDefaultMessage() );
         }
         SysDeptDto deptDto=new SysDeptDto();
         BeanUtils.copyProperties( deptForm,deptDto );
         try {
             return ResultVO.success( ResultEnum.SUCCESS.getMsg(), deptService.update( deptDto ));
         } catch (Exception e) {
-            //TODO
+            return ResultVO.fail( ResultEnum.DEPARTMENT_UPDATE_ERROR.getMsg());
         }
-        return ResultVO.fail( ResultEnum.DEPARTMENT_UPDATE_ERROR.getMsg());
     }
 
     @PostMapping("/save")
     @ResponseBody
     public ResultVO save(@Valid  DeptForm deptForm , BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            //TODO：跳转错误页面
-            //e=bindingResult.getFieldError().getDefaultMessage();
-            //map.put("error",e)
-            //map.put("url","");
-            //mv.add(map)
-            //return modelandview("error.jsp",mv)
-            //不用抛出异常，直接跳错误提示页面
-            throw new ResultException( ResultEnum.PARAM_IS_ERROR );
+            return ResultVO.fail( bindingResult.getFieldError().getDefaultMessage() );
         }
         SysDeptDto deptDto=new SysDeptDto();
         BeanUtils.copyProperties( deptForm,deptDto );
         try {
             return ResultVO.success( ResultEnum.SUCCESS.getMsg(), deptService.save( deptDto ));
         } catch (Exception e) {
-            //跳错误提示页面
+            return ResultVO.fail( ResultEnum.DEPARTMENT_INSERT_ERROR.getMsg());
         }
-        return ResultVO.fail( ResultEnum.DEPARTMENT_INSERT_ERROR.getMsg());
     }
     @RequestMapping("/tree")
     @ResponseBody
@@ -89,7 +82,6 @@ public class SysDeptController {
         try {
             List<SysDept> deptList=deptService.findAllDept();
             List<SysDeptDto> deptDtoList = TreeUtils.findAll( deptList );
-            //return ResultVO.fail( "123" );
             return ResultVO.success( ResultEnum.SUCCESS.getMsg(),deptDtoList );
         } catch (Exception e) {
             return ResultVO.fail( e.getMessage() );

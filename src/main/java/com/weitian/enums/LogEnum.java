@@ -19,6 +19,7 @@ public enum LogEnum {
     ROLE_TABLE(5,"角色表"),
     ROLE_USER_TABLE(6,"角色用户关系表"),
     ROLE_ACL_TABLE(7,"角色权限关系表"),
+    
 
 
     RESTORE_FINISH("已还原",1),

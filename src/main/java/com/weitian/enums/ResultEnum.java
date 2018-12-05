@@ -26,6 +26,9 @@ public enum ResultEnum {
 
     /*员工异常*/
     USER_INSERT_ERROR(400,"新增员工失败"),
+    USER_DELETE_ERROR(401,"删除员工失败"),
+    USER_NOT_EXIST(402,"员工不存在"),
+    USER_UPDATE_ERROR(403,"员工更新失败"),
 
     /*操作日志异常*/
     OPERATOR_LOG_ERROR(900,"操作日志新增失败"),

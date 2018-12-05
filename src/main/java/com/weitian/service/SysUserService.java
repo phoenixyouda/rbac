@@ -13,4 +13,7 @@ public interface SysUserService {
     public SysUser findById(Integer id);
     public Page<SysUser> findAll(Integer currPage,Integer pageSize,Integer departmentId);
     public SysUser save(SysUserDto sysUserDto);
+    public SysUser update(SysUserDto sysUserDto);
+
+    public void delete(Integer id);
 }
