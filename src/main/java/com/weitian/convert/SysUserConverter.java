@@ -30,7 +30,6 @@ public class SysUserConverter {
 
         sysUserDto.setDeptName( sysUser.getSysDept().getName() );
 
-        sysUserDto.setStatusName( SysUtils.getByCode( sysUser.getStatus(), StatusEnum.class ).getMessage() );
         sysUserDto.setDeptId( sysUser.getSysDept().getId() );
         return sysUserDto;
     }

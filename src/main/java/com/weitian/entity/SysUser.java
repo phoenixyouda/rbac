@@ -44,9 +44,6 @@ public class SysUser {
     @JoinColumn(name="dept_id")
     @JsonProperty(value="sysDept")
     private SysDept sysDept;
-    @Column(name="status")
-    @Expose
-    private Integer status;
     @Column(name="remark")
     @Expose
     private String remark;

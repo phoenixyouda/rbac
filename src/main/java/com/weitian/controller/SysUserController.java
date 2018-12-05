@@ -59,7 +59,7 @@ public class SysUserController {
             userService.delete( id );
             return ResultVO.success( ResultEnum.SUCCESS.getMsg() );
         }catch(Exception ex){
-            return ResultVO.fail( ResultEnum.USER_DELETE_ERROR.getMsg() );
+            return ResultVO.fail(ex.getMessage());
         }
     }
 
@@ -76,8 +76,8 @@ public class SysUserController {
             }else{
                 return ResultVO.success( ResultEnum.SUCCESS.getMsg(), userService.update( userDto ) );
             }
-        } catch (Exception e) {
-            return ResultVO.fail( ResultEnum.USER_INSERT_ERROR.getMsg() );
+        } catch (Exception ex) {
+            return ResultVO.fail(ex.getMessage());
         }
     }
 

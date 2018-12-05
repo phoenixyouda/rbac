@@ -56,8 +56,8 @@ public class SysDeptServiceImpl implements SysDeptService {
         //查询部门是否存在
         SysDept sysDept=this.findOne( id );
         if(null==sysDept){
-            log.error( "【删除部门失败】,msg={},code={}",ResultEnum.DEPARTMENT_NOT_EXIST.getMsg(),ResultEnum.DEPARTMENT_NOT_EXIST.getCode() );
-            throw new ResultException( ResultEnum.DEPARTMENT_NOT_EXIST );
+            log.error( "【删除部门失败】,msg={},code={}",ResultEnum.DEPARTMENT_NOT_EXISTS.getMsg(),ResultEnum.DEPARTMENT_NOT_EXISTS.getCode() );
+            throw new ResultException( ResultEnum.DEPARTMENT_NOT_EXISTS );
         }
         //查询是否包含子部门
         List<SysDept> sysDeptList=deptRepository.findByParentId( id );
@@ -91,14 +91,20 @@ public class SysDeptServiceImpl implements SysDeptService {
 
 
         String oldValue=SysUtils.getJsonByObject( oldDept );
-        SysDept newDept=new SysDept();
-        BeanUtils.copyProperties( oldDept,newDept );
-        newDept.setName( deptDto.getName() );
-        newDept.setOperator( SysUtils.getSessionUserName() );
-        newDept.setOperatorIP( SysUtils.getSessionUserIp() );
-        newDept.setOperatorTime( new Date(  ) );
+
+
+
+        //查询部门名称是否重复
+        SysDept dept=deptRepository.findByParentIdAndName( deptDto.getParentId(),deptDto.getName() );
+        if(null!=dept){
+            log.error( "【部门更新异常】,message={},code={}",ResultEnum.DEPARMENTNAME_IS_EXISTS.getMsg(),ResultEnum.DEPARMENTNAME_IS_EXISTS.getCode() );
+            throw new ResultException( ResultEnum.DEPARMENTNAME_IS_EXISTS );
+        }
+        SysDept newDept=SysDeptConverter.convert( deptDto );
+        String newValue=SysUtils.getJsonByObject( newDept );
+
         SysDept updateDept=deptRepository.save( newDept );
-        String newValue=SysUtils.getJsonByObject( updateDept );
+
         if(null==updateDept){
             log.error( "【部门更新异常】,message={},code={}",ResultEnum.DEPARTMENT_UPDATE_ERROR.getMsg(),ResultEnum.DEPARTMENT_UPDATE_ERROR.getCode() );
             throw new ResultException( ResultEnum.DEPARTMENT_UPDATE_ERROR );
@@ -151,11 +157,10 @@ public class SysDeptServiceImpl implements SysDeptService {
 
         SysDept sysDept= SysDeptConverter.convert( deptDto );
         //保存
-        sysDept.setOperator( SysUtils.getSessionUserName() );
-        sysDept.setOperatorIP( SysUtils.getSessionUserIp() );
+
         sysDept=deptRepository.save( sysDept);
         if(null==sysDept){
-            log.error( "【部门异常】,msg={},code={} ",ResultEnum.DEPARTMENT_INSERT_ERROR.getMsg(),ResultEnum.DEPARTMENT_INSERT_ERROR.getCode());
+            log.error( "【新增部门异常】,msg={},code={} ",ResultEnum.DEPARTMENT_INSERT_ERROR.getMsg(),ResultEnum.DEPARTMENT_INSERT_ERROR.getCode());
             throw new ResultException( ResultEnum.DEPARTMENT_INSERT_ERROR );
         }else{
             /*同步更新日志*/

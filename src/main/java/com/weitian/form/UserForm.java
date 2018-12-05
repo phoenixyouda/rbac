@@ -19,6 +19,5 @@ public class UserForm {
     @NotEmpty(message = "电话不得为空")
     private String telephone;
 
-    private Integer status;
     private String remark;
 }

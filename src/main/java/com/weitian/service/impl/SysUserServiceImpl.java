@@ -87,6 +87,7 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
+    @Transactional
     public SysUser update(SysUserDto sysUserDto) {
         SysUser oldSysUser=userRepository.findOne( sysUserDto.getId() );
 
@@ -125,8 +126,8 @@ public class SysUserServiceImpl implements SysUserService {
 
         SysDept sysDept= deptService.findOne(sysUserDto.getDeptId());
         if(null==sysDept){
-            log.error( "【新增员工失败】,msg={},code={}",ResultEnum.DEPARTMENT_NOT_EXIST.getMsg(),ResultEnum.DEPARTMENT_NOT_EXIST.getCode() );
-            throw new ResultException( ResultEnum.DEPARTMENT_NOT_EXIST );
+            log.error( "【新增员工失败】,msg={},code={}",ResultEnum.DEPARTMENT_NOT_EXISTS.getMsg(),ResultEnum.DEPARTMENT_NOT_EXISTS.getCode() );
+            throw new ResultException( ResultEnum.DEPARTMENT_NOT_EXISTS );
         }
 
         SysUser sysUser=SysUserConverter.convert2User( sysUserDto );
@@ -174,7 +175,7 @@ public class SysUserServiceImpl implements SysUserService {
     public SysUser findById(Integer id){
         if(id==null) {
 
-            throw new ResultException( ResultEnum.REQUESTDATA_NOT_EXIST );
+            throw new ResultException( ResultEnum.REQUESTDATA_NOT_EXISTS );
         }
         return userRepository.findOne( id );
     }

@@ -3,4 +3,6 @@ spring:
  sysConfig:
   deptRootLevel: 0
   deptRootId: 0
+  aclModuleRootLevel: 0
+  aclModuleRootId: 0
   separator: .

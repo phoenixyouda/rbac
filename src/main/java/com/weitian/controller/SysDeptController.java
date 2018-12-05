@@ -1,5 +1,6 @@
 package com.weitian.controller;
 
+import com.weitian.convert.SysDeptConverter;
 import com.weitian.dto.SysDeptDto;
 import com.weitian.entity.SysDept;
 import com.weitian.enums.ResultEnum;
@@ -32,7 +33,7 @@ public class SysDeptController {
 
     @RequestMapping("/del")
     @ResponseBody
-    public ResultVO del(@RequestParam(name = "id",defaultValue = "-1")Integer id){
+    public ResultVO del(@RequestParam(name = "id")Integer id){
         if(null==id){
             return ResultVO.fail( ResultEnum.PARAM_IS_ERROR.getMsg() );
         }
@@ -52,12 +53,13 @@ public class SysDeptController {
         if(bindingResult.hasErrors()){
             return ResultVO.fail( bindingResult.getFieldError().getDefaultMessage() );
         }
-        SysDeptDto deptDto=new SysDeptDto();
-        BeanUtils.copyProperties( deptForm,deptDto );
+        SysDept sysDept=deptService.findOne( deptForm.getId() );
+        sysDept.setName( deptForm.getName() );
+        SysDeptDto deptDto=SysDeptConverter.convert( sysDept );
         try {
             return ResultVO.success( ResultEnum.SUCCESS.getMsg(), deptService.update( deptDto ));
-        } catch (Exception e) {
-            return ResultVO.fail( ResultEnum.DEPARTMENT_UPDATE_ERROR.getMsg());
+        } catch (Exception ex) {
+            return ResultVO.fail(ex.getMessage());
         }
     }
 
@@ -71,8 +73,8 @@ public class SysDeptController {
         BeanUtils.copyProperties( deptForm,deptDto );
         try {
             return ResultVO.success( ResultEnum.SUCCESS.getMsg(), deptService.save( deptDto ));
-        } catch (Exception e) {
-            return ResultVO.fail( ResultEnum.DEPARTMENT_INSERT_ERROR.getMsg());
+        } catch (Exception ex) {
+            return ResultVO.fail(ex.getMessage());
         }
     }
     @RequestMapping("/tree")

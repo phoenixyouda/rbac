@@ -1,5 +1,6 @@
 package com.weitian.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -26,6 +27,7 @@ public class SysAcl {
     @Column(name="code")
     private String code;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name="acl_module_id")
     private SysAclModule sysAclModule;

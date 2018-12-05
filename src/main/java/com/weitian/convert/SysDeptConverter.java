@@ -3,6 +3,7 @@ package com.weitian.convert;
 import com.google.common.collect.Lists;
 import com.weitian.dto.SysDeptDto;
 import com.weitian.entity.SysDept;
+import com.weitian.utils.SysUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -32,6 +33,8 @@ public class SysDeptConverter {
     public static SysDept convert(SysDeptDto sysDeptDto){
         SysDept sysDept=new SysDept();
         BeanUtils.copyProperties( sysDeptDto,sysDept );
+        sysDept.setOperator( SysUtils.getSessionUserName() );
+        sysDept.setOperatorIP( SysUtils.getSessionUserIp() );
         return sysDept;
     }
 }

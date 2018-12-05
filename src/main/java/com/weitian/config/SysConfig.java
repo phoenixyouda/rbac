@@ -16,7 +16,21 @@ public class SysConfig {
     public static String deptRootLevel;
 
     public static Integer deptRootId;
+
+    public static String aclModuleRootLevel;
+    public static Integer aclModuleRootId;
+
     public static String separator;
+
+    @Value( "${aclModuleRootLevel}" )
+    public void setAclModuleRootLevel(String aclModuleRootLevel) {
+        SysConfig.aclModuleRootLevel=aclModuleRootLevel;
+    }
+
+    @Value("${aclModuleRootId}")
+    public void setAclModuleRootId(Integer aclModuleRootId) {
+        SysConfig.aclModuleRootId=aclModuleRootId;
+    }
 
     @Value("${deptRootId}")
     public void setDeptRootId(Integer deptRootId) {
