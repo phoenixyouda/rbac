@@ -1,6 +1,7 @@
 package com.weitian.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.google.gson.annotations.Expose;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -21,9 +22,14 @@ import java.util.List;
 public class SysAcl {
     @Id
     @GeneratedValue
+    @Expose
     private Integer id;
+
+    @Expose
     @Column(name="name")
     private String name;
+
+    @Expose
     @Column(name="code")
     private String code;
 
@@ -33,21 +39,42 @@ public class SysAcl {
     private SysAclModule sysAclModule;
 
     @Column(name="url")
+    @Expose
     private String url;
+
     @Column(name="type")
+    @Expose
     private Integer type;
+
     @Column(name="sort")
+    @Expose
     private Integer sort;
+
     @Column(name="status")
+    @Expose
     private Integer status;
+
     @Column(name="remark")
+    @Expose
     private String remark;
+
     @Column(name="operator")
+    @Expose
     private String operator;
+
     @Column(name="operator_time")
+    @Expose
     private Date operatorTime;
+
     @Column(name="operator_ip")
+    @Expose
     private String operatorIP;
+
+    @JsonBackReference
     @ManyToMany(mappedBy = "sysAclList")
     private List<SysRole> sysRoleList;
+
+    @Transient
+    private boolean checked;
+
 }

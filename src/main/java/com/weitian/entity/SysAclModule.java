@@ -52,4 +52,10 @@ public class SysAclModule {
     @OneToMany(mappedBy = "sysAclModule")
     @JsonManagedReference
     private List<SysAcl> sysAclList;
+
+
+    @Transient
+    private boolean checked;
+
+
 }

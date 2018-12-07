@@ -21,6 +21,7 @@ public class SysAclModuleConverter {
     public static SysAclModuleDto convert(SysAclModule sysAclModule){
         SysAclModuleDto sysAclModuleDto=new SysAclModuleDto();
         BeanUtils.copyProperties( sysAclModule, sysAclModuleDto);
+
         return sysAclModuleDto;
     }
 

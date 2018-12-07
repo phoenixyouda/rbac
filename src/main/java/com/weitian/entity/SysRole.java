@@ -1,6 +1,7 @@
 package com.weitian.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.google.gson.annotations.Expose;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -24,26 +25,48 @@ import java.util.List;
 public class SysRole {
     @Id
     @GeneratedValue
+    @Expose
     private Integer id;
+
+    @Expose
     @Column(name="name")
     private String name;
+
+    @Expose
     @Column(name="type")
     private Integer type;
+
+    @Expose
     @Column(name="sort")
     private Integer sort;
+
+    @Expose
     @Column(name="status")
     private Integer status;
+
+    @Expose
     @Column(name="remark")
     private String remark;
+
+    @Expose
     @Column(name="operator")
     private String operator;
+
+    @Expose
     @Column(name="operator_time")
     private Date operatorTime;
+
+    @Expose
     @Column(name="operator_ip")
     private String operatorIP;
+
+
     @JsonBackReference
     @ManyToMany(mappedBy = "sysRoleList")
     private List<SysUser> sysUserList;
+
+
+    @JsonBackReference
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="sys_role_acl",joinColumns = {@JoinColumn(name="role_id")},inverseJoinColumns = {@JoinColumn(name="acl_id")})
     private List<SysAcl> sysAclList;

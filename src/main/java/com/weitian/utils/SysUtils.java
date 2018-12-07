@@ -4,11 +4,17 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.weitian.entity.SysUser;
 import com.weitian.enums.CodeEnum;
+import freemarker.template.SimpleDate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
+import java.util.UUID;
+import java.util.logging.SimpleFormatter;
 
 /**
  * Created by Administrator on 2018/11/28.
@@ -81,5 +87,12 @@ public class SysUtils {
     public static String getJsonByObject(Object obj) {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         return gson.toJson( obj );
+    }
+
+    //生成权限点code码(16位)
+    public static String getCodeForAcl(){
+
+        String code= UUID.randomUUID().toString().replace( "-","" );
+        return code;
     }
 }

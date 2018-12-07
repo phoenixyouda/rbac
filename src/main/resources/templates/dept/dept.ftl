@@ -314,7 +314,6 @@
                         "<td>"+userList[i].deptName+"</td>" +
                         "<td>"+userList[i].telephone+"</td>" +
                         "<td>"+userList[i].mail+"</td>" +
-                        "<td>"+userList[i].statusName+"</td>" +
                         "<td><a href='#' onclick='showUserFrame("+userList[i].id+")'>修改</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#' onclick='deleteUser("+userList[i].id+")'>删除</a></td>" +
                         "</tr>";
                 $("#dynamic-table tbody").append(str);
@@ -357,7 +356,6 @@
                 type: 'POST',
                 success: function(result) {
                     if (result.rect) {
-                        console.info(result.data);
 
                         $("#dialog-user-form").dialog({
                             model: true,
@@ -391,9 +389,6 @@
                     }
                 }
             });
-
-
-
         }
 
 
@@ -496,9 +491,7 @@
                             <th tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1">
                                 邮箱
                             </th>
-                            <th tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1">
-                                状态
-                            </th>
+
                             <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="">操作</th>
                         </tr>
                         </thead>

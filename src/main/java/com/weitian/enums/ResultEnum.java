@@ -39,6 +39,25 @@ public enum ResultEnum {
     MODULE_CONTAINS_CHILDMODULES(535,"模块下包含子模块"),
     MODULE_CONTAINS_ACLS(536,"模块下包含权限点"),
 
+    /*权限点异常*/
+
+    ACL_INSERT_ERROR(600,"新增权限点失败"),
+    ACL_UPDATE_ERROR(601,"修改权限点失败"),
+    ACL_DELETE_ERROR(602,"删除权限点失败"),
+    ACL_IS_EXISTS(603,"权限点名称重复"),
+    ACL_IS_USED(604," 该权限点正在使用中"),
+    ACL_NOT_EXISTS(605,"该权限不存在"),
+
+
+    /*角色异常*/
+    ROLE_IS_EXISTS(700,"角色名称重复"),
+    ROLE_INSERT_ERROR(701,"新增角色失败"),
+    ROLE_UPDATE_ERROR(702,"修改角色失败"),
+    ROLE_DELETE_ERROR(703,"删除角色失败"),
+    ROLE_IS_USED(704,"该角色正在使用中"),
+    ROLE_NOT_EXISTS(705,"该角色不存在"),
+
+
     /*操作日志异常*/
     OPERATOR_LOG_ERROR(900,"操作日志新增失败"),
     ;

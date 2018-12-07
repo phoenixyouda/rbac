@@ -4,16 +4,23 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.weitian.config.SysConfig;
+import com.weitian.convert.SysAclConverter;
 import com.weitian.convert.SysAclModuleConverter;
 import com.weitian.convert.SysDeptConverter;
+import com.weitian.dto.SysAclDto;
 import com.weitian.dto.SysAclModuleDto;
 import com.weitian.dto.SysDeptDto;
+import com.weitian.entity.SysAcl;
 import com.weitian.entity.SysAclModule;
 import com.weitian.entity.SysDept;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
 public class TreeUtils {
+
+
+
 
 
     /**
@@ -37,7 +44,7 @@ public class TreeUtils {
                 sysAclModuleDtoList.add( sysAclModuleDto );
             }
         }
-        //产生部门树
+        //产生权限模块树
 
         aclModuleTree(sysAclModuleDtoList,SysConfig.aclModuleRootLevel,moduleLevelMap);
         return sysAclModuleDtoList;
@@ -45,6 +52,9 @@ public class TreeUtils {
 
     public static void aclModuleTree(List<SysAclModuleDto> sysAclModuleDtoList,String level,Multimap<String,SysAclModuleDto> levelMap){
 
+        if(CollectionUtils.isEmpty( sysAclModuleDtoList )){
+            return ;
+        }
 
         for(SysAclModuleDto aclModuleDto:sysAclModuleDtoList){
             //当前部门层级
@@ -135,6 +145,9 @@ public class TreeUtils {
 
     public static void deptTree(List<SysDeptDto> sysDeptDtoList,String level,Multimap<String,SysDeptDto> levelMap){
 
+        if(CollectionUtils.isEmpty( sysDeptDtoList )){
+            return ;
+        }
 
         for(SysDeptDto sysDept:sysDeptDtoList){
             //当前部门层级

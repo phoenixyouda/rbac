@@ -12,6 +12,15 @@ import java.util.List;
 public class SysAclModuleDto extends SysAclModule{
     //子模块
     private List<SysAclModuleDto> children;
+
+
     //默认打开方式
     private boolean open;
+
+
+
+
+
+
+
 }

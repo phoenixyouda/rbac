@@ -63,7 +63,7 @@ create table `sys_acl_module`(
 DROP TABLE IF EXISTS `sys_acl`;
 create table `sys_acl`(
 	`id` int not null auto_increment comment '权限id',
-	`code` varchar(16) not null comment '权限码',
+	`code` varchar(32) not null comment '权限码',
 	`name` varchar(32) not null default '' comment '权限名称',
 	`acl_module_id` int not null default '0' comment '权限模块id',
 	`url` varchar(128) not null comment '请求的url，可以使用正则表达式',
