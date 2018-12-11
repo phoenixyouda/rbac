@@ -6,6 +6,8 @@ import com.weitian.entity.SysLog;
 import com.weitian.entity.SysRole;
 import com.weitian.entity.SysRoleAcl;
 import com.weitian.enums.LogEnum;
+import com.weitian.enums.ResultEnum;
+import com.weitian.exception.ResultException;
 import com.weitian.repository.SysRoleAclRepository;
 import com.weitian.service.SysLogService;
 import com.weitian.service.SysRoleAclService;
@@ -39,7 +41,7 @@ public class SysRoleAclServiceImpl implements SysRoleAclService {
         Integer roleId=sysRole.getId();
         List<SysRoleAcl> roleAclList=roleAclRepository.findAllByRoleId( roleId );
         if(CollectionUtils.isEmpty( roleAclList )){
-            return ;
+            return;
         }
         roleAclRepository.deleteByRoleId( roleId );
 

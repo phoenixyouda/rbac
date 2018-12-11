@@ -297,6 +297,7 @@
             if (selectFirstTab) {//selectFirtTab为true，加载第一个面板
                 loadRoleAcl(roleId);
             }
+
         }
         //加载角色与权限
         function loadRoleAcl(selectedRoleId) {
@@ -444,14 +445,17 @@
                     }
                 }
             })
-        }
+        };
 
 
-        $("#roleTab a[data-toggle='tab']").on("shown.bs.tab", function(e) {
+        $("#roleTab a[data-toggle='tab']").on('shown.bs.tab', function(e) {
+            console.info(111);
             if(lastRoleId == -1) {
                 showMessage("加载角色关系","请先在左侧选择操作的角色", false);
                 return;
             }
+
+
             if (e.target.getAttribute("href") == '#roleAclTab') {
                 selectFirstTab = true;
                 loadRoleAcl(lastRoleId);
@@ -464,13 +468,13 @@
 
         function loadRoleUser(selectedRoleId) {
             $.ajax({
-                url: "/sys/role/users.json",
+                url: "/sys/role/users",
                 data: {
                     roleId: selectedRoleId
                 },
                 type: 'POST',
                 success: function (result) {
-                    if (result.ret) {
+                    if (result.rect) {
                         var renderedSelect = Mustache.render(selectedUsersTemplate, {userList: result.data.selected});
                         var renderedUnSelect = Mustache.render(unSelectedUsersTemplate, {userList: result.data.unselected});
                         $("#roleUserList").html(renderedSelect + renderedUnSelect);
@@ -499,15 +503,15 @@
                 return;
             }
             $.ajax({
-                url: "/sys/role/changeUsers.json",
+                url: "/sys/role/changeUsers",
                 data: {
                     roleId: lastRoleId,
                     userIds: $("#roleUserList").val() ? $("#roleUserList").val().join(",") : ''
                 },
                 type: 'POST',
                 success: function (result) {
-                    if (result.ret) {
-                        showMessage("保存角色与用户的关系", "操作成功", false);
+                    if (result.rect) {
+                        showMessage("保存角色与用户的关系", result.msg, true);
                     } else {
                         showMessage("保存角色与用户的关系", result.msg, false);
                     }

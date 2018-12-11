@@ -86,6 +86,11 @@ public class SysUserServiceImpl implements SysUserService {
 
     }
 
+    /**
+     * 修改用户
+     * @param sysUserDto
+     * @return
+     */
     @Override
     @Transactional
     public SysUser update(SysUserDto sysUserDto) {
@@ -146,8 +151,18 @@ public class SysUserServiceImpl implements SysUserService {
         return sysUser;
     }
 
+    @Override
+    public List<SysUser> findAllByIdIn(List<Integer> ids) {
+        return userRepository.findAllByIdIn( ids );
+    }
+
+    @Override
+    public List<SysUser> findAll() {
+        return userRepository.findAll();
+    }
+
     /**
-     * 查询所有人员信息
+     * 分页查询所有人员信息
      * @return
      */
     @Override

@@ -22,6 +22,7 @@ import java.util.List;
 @Data
 @DynamicUpdate
 public class SysUser {
+
     @Id
     @GeneratedValue
     @Expose

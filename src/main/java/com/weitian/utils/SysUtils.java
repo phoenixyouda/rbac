@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.weitian.entity.SysUser;
 import com.weitian.enums.CodeEnum;
+import com.weitian.enums.LogEnum;
 import freemarker.template.SimpleDate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -78,6 +79,32 @@ public class SysUtils {
         for (T each : enumCls.getEnumConstants()) {
             if (code.equals( each.getCode() )) {
                 return each;
+            }
+        }
+        return null;
+    }
+
+
+    public static LogEnum getByTableCode(Integer code){
+        for(LogEnum logEnum:LogEnum.class.getEnumConstants()){
+            if(code.equals( logEnum.getTableCode() )){
+                return logEnum;
+            }
+        }
+        return null;
+    }
+    public static LogEnum getByOperatorCode(Integer code){
+        for(LogEnum logEnum:LogEnum.class.getEnumConstants()){
+            if(code.equals( logEnum.getOperatorCode() )){
+                return logEnum;
+            }
+        }
+        return null;
+    }
+    public static LogEnum getByStatusCode(Integer code){
+        for(LogEnum logEnum:LogEnum.class.getEnumConstants()){
+            if(code.equals( logEnum.getStatusCode() )){
+                return logEnum;
             }
         }
         return null;

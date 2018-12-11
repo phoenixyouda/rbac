@@ -11,4 +11,6 @@ import java.util.List;
 public interface SysRoleUserRepository extends JpaRepository<SysRoleUser,Integer>{
     public void deleteByUserId(Integer userId);
     public List<SysRoleUser> findByUserId(Integer userId);
+    public List<SysRoleUser> findByRoleId(Integer roleId);
+    public void deleteByRoleId(Integer roleId);
 }

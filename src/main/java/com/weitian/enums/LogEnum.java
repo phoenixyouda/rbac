@@ -62,4 +62,5 @@ public enum LogEnum {
         this.tableCode = tableCode;
         this.tableName = tableName;
     }
+
 }

@@ -12,6 +12,9 @@ import java.util.List;
 public interface SysUserService {
     public SysUser findById(Integer id);
     public Page<SysUser> findAll(Integer currPage,Integer pageSize,Integer departmentId);
+    public List<SysUser> findAll();
+
+    public List<SysUser> findAllByIdIn(List<Integer> ids);
     public SysUser save(SysUserDto sysUserDto);
     public SysUser update(SysUserDto sysUserDto);
 

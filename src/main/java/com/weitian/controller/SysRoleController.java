@@ -5,15 +5,10 @@ import com.weitian.convert.SysAclModuleConverter;
 import com.weitian.convert.SysRoleConverter;
 import com.weitian.dto.SysAclModuleDto;
 import com.weitian.dto.SysRoleDto;
-import com.weitian.entity.SysAcl;
-import com.weitian.entity.SysAclModule;
-import com.weitian.entity.SysRole;
+import com.weitian.entity.*;
 import com.weitian.enums.ResultEnum;
 import com.weitian.form.RoleForm;
-import com.weitian.service.SysAclModuleService;
-import com.weitian.service.SysAclService;
-import com.weitian.service.SysRoleAclService;
-import com.weitian.service.SysRoleService;
+import com.weitian.service.*;
 import com.weitian.utils.TreeUtils;
 import com.weitian.vo.ResultVO;
 import freemarker.template.utility.StringUtil;
@@ -27,10 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Administrator on 2018/12/6.
@@ -44,10 +37,77 @@ public class SysRoleController {
     @Autowired
     private SysAclService aclService;
     @Autowired
+    private SysUserService userService;
+    @Autowired
     private SysRoleAclService roleAclService;
+    @Autowired
+    private SysRoleUserService roleUserService;
+
     @Autowired
     private SysAclModuleService moduleService;
 
+
+
+    /**
+     * 新增角色用户
+     * @param roleId
+     * @param userIds
+     * @return
+     */
+    @RequestMapping("/changeUsers")
+    @ResponseBody
+    public ResultVO changeUsers(@RequestParam("roleId") Integer roleId,@RequestParam("userIds") String userIds){
+
+        if(null==roleId){
+            return ResultVO.fail( ResultEnum.PARAM_IS_ERROR.getMsg() );
+        }
+
+        if(StringUtils.isEmpty( userIds )){
+            return ResultVO.fail( ResultEnum.PARAM_IS_ERROR.getMsg() );
+        }
+
+        List<String> ids=Arrays.asList( userIds.split( "," ));
+        try {
+            roleUserService.deleteByRoleId( roleId );
+            roleUserService.save( roleId ,ids);
+        }catch (Exception ex){
+            return ResultVO.fail( ex.getMessage() );
+        }
+        return ResultVO.success( ResultEnum.SUCCESS.getMsg() );
+    }
+
+
+    /**
+     * 根据角色显示所属用户及非角色用户
+     * @param roleId
+     * @return
+     */
+    @RequestMapping("/users")
+    @ResponseBody
+    public ResultVO findUsers(@RequestParam("roleId") Integer roleId){
+        if(null==roleId){
+            return ResultVO.fail( ResultEnum.PARAM_IS_ERROR.getMsg() );
+        }
+
+        SysRole sysRole=roleService.findOne( roleId );
+        List<SysRoleUser> roleUserList=roleUserService.findByRoleId( sysRole.getId() );
+        List<Integer> userIds=roleUserList.stream().map( e->e.getUserId() ).collect( Collectors.toList() );
+
+        List<SysUser> selectedUsers=userService.findAllByIdIn( userIds );
+
+        List<SysUser> allUsers=userService.findAll();
+
+        List<SysUser> unSelectedUsers= new ArrayList<>(  );
+        for(SysUser sUser:selectedUsers) {
+            allUsers.remove( sUser );
+        }
+
+
+        Map<String,List<SysUser>> map=new HashMap<>(  );
+        map.put("selected", selectedUsers);
+        map.put("unselected", allUsers);
+        return ResultVO.success( ResultEnum.SUCCESS.getMsg(), map);
+    }
 
     /**
      * 根据角色显示权限树列表
@@ -73,6 +133,12 @@ public class SysRoleController {
         return ResultVO.success( ResultEnum.SUCCESS.getMsg(), aclModuleList );
     }
 
+    /**
+     * 新增角色权限
+     * @param roleId
+     * @param aclIds
+     * @return
+     */
     @RequestMapping("/changeAcls")
     @ResponseBody
     public ResultVO changeAcls(@RequestParam("roleId") Integer roleId,@RequestParam("aclIds") String aclIds){
