@@ -13,8 +13,13 @@ import lombok.Setter;
 public enum ResultEnum {
 
     SUCCESS(200,"成功"),
+    LOGIN_SUCCESS(201,"成功登录"),
+    LOGOUT_SUCCESS(202,"成功注销"),
     REQUESTDATA_NOT_EXISTS(501,"请求数据不存在"),
+
     PARAM_IS_ERROR(502,"请求参数不正确"),
+    USERNAME_OR_PASSWORD_NOTNULL(503,"用户名或密码不得为空"),
+    USERNAME_OR_PASSWORD_IS_ERROR(504,"用户名或密码错误"),
     /*部门异常*/
     PARENTDEPT_NOT_EXISTS(300,"父部门不存在"),
     DEPARTMENT_NOT_EXISTS(301,"部门不存在"),

@@ -417,7 +417,7 @@
                 },
                 type: 'POST',
                 success: function (result) {
-                    if (result.ret) {
+                    if (result.rect) {
                         showMessage("保存角色与权限点的关系", result.msg, true);
                     } else {
                         showMessage("保存角色与权限点的关系", result.msg, false);

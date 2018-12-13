@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 
@@ -13,7 +14,8 @@ import java.util.Date;
 @Entity
 @Data
 @Table(name="sys_role_user")
-public class SysRoleUser {
+public class SysRoleUser implements Serializable{
+    private static final long serialVersionUID = -5774205575822817598L;
     @Id
     @GeneratedValue
     @Expose

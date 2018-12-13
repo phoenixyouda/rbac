@@ -15,6 +15,9 @@ import com.weitian.service.SysLogService;
 import com.weitian.utils.SysUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +34,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
+@CacheConfig(cacheNames = "SysAclServiceImpl")
 public class SysAclServiceImpl implements SysAclService{
 
     @Autowired
@@ -48,6 +52,7 @@ public class SysAclServiceImpl implements SysAclService{
      */
     @Override
     @Transactional
+    @CacheEvict(allEntries = true)
     public SysAcl update(SysAclDto sysAclDto) {
         //查出原值
         SysAcl oldAcl=aclRepository.findOne( sysAclDto.getId() );
@@ -94,6 +99,7 @@ public class SysAclServiceImpl implements SysAclService{
      */
     @Override
     @Transactional
+    @CacheEvict(allEntries = true)
     public SysAcl save(SysAclDto sysAclDto) {
 
         //检查相同权限组下权限点名称不得重复
@@ -126,6 +132,7 @@ public class SysAclServiceImpl implements SysAclService{
     }
 
     @Override
+    @Cacheable
     public List<SysAcl> findBySysAclModuleAndName(SysAclModule sysAclModule, String name) {
 
         return aclRepository.findAllBySysAclModuleAndName( sysAclModule,name );
@@ -139,6 +146,7 @@ public class SysAclServiceImpl implements SysAclService{
      * @return
      */
     @Override
+    @Cacheable
     public Page<SysAcl> findByModuleId(Integer currPage,Integer pageSize, Integer moduleId) {
 
         SysAclModule sysAclModule = moduleService.findOne( moduleId );
@@ -159,6 +167,7 @@ public class SysAclServiceImpl implements SysAclService{
     }
 
     @Override
+    @Cacheable
     public SysAclDto findById(Integer id) {
         SysAcl sysAcl=aclRepository.findOne( id );
         if(null==sysAcl){

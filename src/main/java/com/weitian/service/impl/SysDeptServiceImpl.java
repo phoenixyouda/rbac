@@ -1,5 +1,6 @@
 package com.weitian.service.impl;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.weitian.config.SysConfig;
 import com.weitian.convert.SysDeptConverter;
 import com.weitian.convert.SysLogConvert;
@@ -17,6 +18,10 @@ import com.weitian.utils.SysUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +34,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
+@CacheConfig(cacheNames = "sysDept")
 public class SysDeptServiceImpl implements SysDeptService {
     @Autowired
     private SysDeptRepository deptRepository;
@@ -40,6 +46,7 @@ public class SysDeptServiceImpl implements SysDeptService {
      * @return
      */
     @Override
+    @Cacheable
     public SysDept findOne(Integer id) {
         return deptRepository.findOne( id );
     }
@@ -51,8 +58,8 @@ public class SysDeptServiceImpl implements SysDeptService {
      */
     @Override
     @Transactional
+    @CacheEvict(allEntries = true)
     public void delete(Integer id) {
-
         //查询部门是否存在
         SysDept sysDept=this.findOne( id );
         if(null==sysDept){
@@ -85,6 +92,7 @@ public class SysDeptServiceImpl implements SysDeptService {
      */
     @Override
     @Transactional
+    @CacheEvict(allEntries = true)
     public SysDept update(SysDeptDto deptDto) {
 
         SysDept oldDept=this.findOne( deptDto.getId() );
@@ -120,7 +128,9 @@ public class SysDeptServiceImpl implements SysDeptService {
      * @return
      */
     @Override
+    @Cacheable
     public List<SysDept> findAllDept() {
+        System.out.println( "查询所有部门" );
         Sort sort=new Sort( Sort.Direction.ASC,"sort");
         return deptRepository.findAll(sort);
     }
@@ -135,6 +145,7 @@ public class SysDeptServiceImpl implements SysDeptService {
      */
     @Override
     @Transactional
+    @CacheEvict(allEntries = true)
     public SysDept save(SysDeptDto deptDto) {
 
         //父部门不存在则设置为0
@@ -177,6 +188,7 @@ public class SysDeptServiceImpl implements SysDeptService {
      * @return
      */
     @Override
+    @Cacheable
     public SysDept findByParentIdAndName(Integer parentId, String name) {
         return deptRepository.findByParentIdAndName( parentId,name );
 

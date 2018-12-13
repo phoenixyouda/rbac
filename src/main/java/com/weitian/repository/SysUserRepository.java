@@ -15,5 +15,6 @@ import java.util.List;
 public interface SysUserRepository extends JpaRepository<SysUser,Integer> {
     public Page<SysUser> findAllBySysDept(SysDept sysDept,Pageable pageable);
     public List<SysUser> findAllByIdIn(List<Integer> id);
+    public SysUser findByUsernameAndPassword (String username,String password);
 }
 

@@ -18,6 +18,9 @@ import com.weitian.service.SysUserService;
 import com.weitian.utils.SysUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +39,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
+@CacheConfig(cacheNames = "SysUserServiceImpl")
 public class SysUserServiceImpl implements SysUserService {
     @Autowired
     private SysUserRepository userRepository;
@@ -53,6 +57,7 @@ public class SysUserServiceImpl implements SysUserService {
      */
     @Override
     @Transactional
+    @CacheEvict(allEntries = true)
     public void delete(Integer id) {
 
 
@@ -93,6 +98,7 @@ public class SysUserServiceImpl implements SysUserService {
      */
     @Override
     @Transactional
+    @CacheEvict(allEntries = true)
     public SysUser update(SysUserDto sysUserDto) {
         SysUser oldSysUser=userRepository.findOne( sysUserDto.getId() );
 
@@ -127,6 +133,7 @@ public class SysUserServiceImpl implements SysUserService {
      */
     @Override
     @Transactional
+    @CacheEvict(allEntries = true)
     public SysUser save(SysUserDto sysUserDto) {
 
         SysDept sysDept= deptService.findOne(sysUserDto.getDeptId());
@@ -152,12 +159,15 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
+    @Cacheable
     public List<SysUser> findAllByIdIn(List<Integer> ids) {
         return userRepository.findAllByIdIn( ids );
     }
 
     @Override
+    @Cacheable
     public List<SysUser> findAll() {
+        System.out.println( "查询人员" );
         return userRepository.findAll();
     }
 
@@ -166,6 +176,7 @@ public class SysUserServiceImpl implements SysUserService {
      * @return
      */
     @Override
+    @Cacheable
     public Page<SysUser> findAll(Integer currPage,Integer pageSize,Integer departmentId) {
 
         SysDept sysDept=new SysDept();
@@ -187,11 +198,25 @@ public class SysUserServiceImpl implements SysUserService {
      * @param id
      * @return
      */
+    @Cacheable
+    @Override
     public SysUser findById(Integer id){
         if(id==null) {
 
             throw new ResultException( ResultEnum.REQUESTDATA_NOT_EXISTS );
         }
         return userRepository.findOne( id );
+    }
+
+    /**
+     * 用户登录
+     * @param username
+     * @param password
+     * @return
+     */
+    @Override
+    public SysUser login(String username, String password) {
+        SysUser sysUser=userRepository.findByUsernameAndPassword( username,password );
+        return sysUser;
     }
 }

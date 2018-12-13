@@ -32,6 +32,8 @@ public enum LogEnum {
     OPERATOR_DELETE("删除",2,""),
     OPERATOR_GRANT("授予",3,""),
     OPERATOR_REVOKE("撤销",4,""),
+    OPERATOR_LOGIN("登录",5,""),
+    OPERATOR_LOGOUT("注销",6,""),
 
 
 

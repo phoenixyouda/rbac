@@ -13,6 +13,8 @@ import com.weitian.service.SysLogService;
 import com.weitian.service.SysRoleAclService;
 import com.weitian.utils.SysUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -25,6 +27,7 @@ import java.util.List;
  */
 
 @Service
+@CacheConfig(cacheNames = "SysRoleAclServiceImpl")
 public class SysRoleAclServiceImpl implements SysRoleAclService {
     @Autowired
     private SysRoleAclRepository roleAclRepository;
@@ -37,6 +40,7 @@ public class SysRoleAclServiceImpl implements SysRoleAclService {
      */
     @Override
     @Transactional
+    @CacheEvict(allEntries = true)
     public void delete(SysRole sysRole) {
         Integer roleId=sysRole.getId();
         List<SysRoleAcl> roleAclList=roleAclRepository.findAllByRoleId( roleId );
@@ -61,6 +65,7 @@ public class SysRoleAclServiceImpl implements SysRoleAclService {
 
     @Override
     @Transactional
+    @CacheEvict(allEntries = true)
     public void save(SysRole sysRole, List<SysAcl> sysAclList) {
 
         if(CollectionUtils.isEmpty( sysAclList )){

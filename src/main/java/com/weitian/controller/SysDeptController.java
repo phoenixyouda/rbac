@@ -12,6 +12,7 @@ import com.weitian.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -65,6 +66,7 @@ public class SysDeptController {
 
     @PostMapping("/save")
     @ResponseBody
+
     public ResultVO save(@Valid  DeptForm deptForm , BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             return ResultVO.fail( bindingResult.getFieldError().getDefaultMessage() );
@@ -83,9 +85,11 @@ public class SysDeptController {
 
         try {
             List<SysDept> deptList=deptService.findAllDept();
+
             List<SysDeptDto> deptDtoList = TreeUtils.findAll( deptList );
             return ResultVO.success( ResultEnum.SUCCESS.getMsg(),deptDtoList );
         } catch (Exception e) {
+
             return ResultVO.fail( e.getMessage() );
         }
     }

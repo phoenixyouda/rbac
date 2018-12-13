@@ -4,6 +4,7 @@ import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -14,7 +15,8 @@ import java.util.Date;
 @Data
 @DynamicUpdate
 @Table(name="sys_log")
-public class SysLog {
+public class SysLog implements Serializable{
+    private static final long serialVersionUID = -1723096110469780699L;
     @Id
     @GeneratedValue
     private Integer id;

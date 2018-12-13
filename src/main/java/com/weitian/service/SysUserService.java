@@ -19,4 +19,6 @@ public interface SysUserService {
     public SysUser update(SysUserDto sysUserDto);
 
     public void delete(Integer id);
+
+    public SysUser login(String username,String password);
 }

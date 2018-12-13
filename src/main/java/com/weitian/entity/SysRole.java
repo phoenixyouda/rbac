@@ -6,6 +6,7 @@ import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +23,8 @@ import java.util.List;
 @Data
 @DynamicUpdate
 @Table(name="sys_role")
-public class SysRole {
+public class SysRole implements Serializable {
+    private static final long serialVersionUID = 3793807254455266526L;
     @Id
     @GeneratedValue
     @Expose

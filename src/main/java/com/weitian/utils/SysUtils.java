@@ -10,6 +10,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,9 +24,15 @@ import java.util.logging.SimpleFormatter;
 public class SysUtils {
 
     public static String getSessionUserName() {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         //获取session
+        HttpSession session=request.getSession();
+        String name="匿名";
+        if(null!=session.getAttribute( "loginUser" )) {
+            name = ((SysUser) session.getAttribute( "loginUser" )).getUsername();
+        }
         //从session中获取登录用户姓名
-        return "user";
+        return name;
     }
 
     public static String getSessionUserIp() {

@@ -7,6 +7,9 @@ import com.weitian.repository.SysLogRepository;
 import com.weitian.service.SysLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +31,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
+@CacheConfig(cacheNames = "SysLogServiceImpl")
 public class SysLogServiceImpl implements SysLogService {
 
 
@@ -36,6 +40,7 @@ public class SysLogServiceImpl implements SysLogService {
     SysLogRepository sysLogRepository;
 
     @Override
+    @Cacheable
     public Page<SysLog> findAll(Integer currPage, Integer pageSize) {
         Pageable pageable=new PageRequest( currPage,pageSize,this.GetSort() );
         return sysLogRepository.findAll( pageable );
@@ -53,6 +58,7 @@ public class SysLogServiceImpl implements SysLogService {
     }
 
     @Override
+    @Cacheable
     public Page<SysLog> findAllByTypeOrOperator(Integer type, String operator, Integer currPage,Integer pageSize) {
 
 
@@ -78,6 +84,7 @@ public class SysLogServiceImpl implements SysLogService {
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public SysLog save(SysLog sysLog) {
         SysLog logTemp=sysLogRepository.save( sysLog );
 

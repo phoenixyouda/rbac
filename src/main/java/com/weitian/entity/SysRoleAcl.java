@@ -5,6 +5,7 @@ import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -14,7 +15,8 @@ import java.util.Date;
 @Entity
 @Data
 @DynamicUpdate
-public class SysRoleAcl {
+public class SysRoleAcl implements Serializable {
+    private static final long serialVersionUID = 2387844862817910657L;
     @Id
     @GeneratedValue
     @Expose

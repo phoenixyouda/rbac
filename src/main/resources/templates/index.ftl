@@ -1,6 +1,7 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <#include "common/backend-common.ftl">
+<#include "${request.contextPath}/common/backend-common.ftl">
 </head>
 
 <body class="no-skin">
@@ -77,7 +78,7 @@
 
         <ul class="nav nav-list">
             <li class="active">
-                <a class="popstyle" href="/sys/user/page.do" target="_blank">
+                <a class="popstyle" href="/sys/dept/show" target="_blank">
                     <i class="menu-icon fa fa-tachometer"></i>
                     <span class="menu-text"> 首页 </span>
                 </a>
@@ -141,6 +142,13 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
+                    <li class="">
+                        <a class="popstyle" href="#" target="_blank" onclick="logout()">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            注销
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
                 </ul>
             </li>
         </ul>
@@ -175,12 +183,12 @@
 <!-- basic scripts -->
 
 <!--[if !IE]> -->
-<script src="/assets/js/jquery-2.1.0.min.js"></script>
+<script src="${request.contextPath}/assets/js/jquery-2.1.0.min.js"></script>
 
 <!-- <![endif]-->
 
 <!--[if IE]>
-<script src="/assets/js/jquery-1.11.0.min.js"></script>
+<script src="${request.contextPath}/assets/js/jquery-1.11.0.min.js"></script>
 <![endif]-->
 
 <!--[if !IE]> -->
@@ -201,19 +209,19 @@
 <!-- page specific plugin scripts -->
 
 <!--[if lte IE 8]>
-<script src="/assets/js/excanvas.min.js"></script>
+<script src="${request.contextPath}/assets/js/excanvas.min.js"></script>
 <![endif]-->
-<script src="/assets/js/jquery-ui.custom.min.js"></script>
-<script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
-<script src="/assets/js/jquery.easypiechart.min.js"></script>
-<script src="/assets/js/jquery.sparkline.min.js"></script>
-<script src="/assets/js/flot/jquery.flot.min.js"></script>
-<script src="/assets/js/flot/jquery.flot.pie.min.js"></script>
-<script src="/assets/js/flot/jquery.flot.resize.min.js"></script>
+<script src="${request.contextPath}/assets/js/jquery-ui.custom.min.js"></script>
+<script src="${request.contextPath}/assets/js/jquery.ui.touch-punch.min.js"></script>
+<script src="${request.contextPath}/assets/js/jquery.easypiechart.min.js"></script>
+<script src="${request.contextPath}/assets/js/jquery.sparkline.min.js"></script>
+<script src="${request.contextPath}/assets/js/flot/jquery.flot.min.js"></script>
+<script src="${request.contextPath}/assets/js/flot/jquery.flot.pie.min.js"></script>
+<script src="${request.contextPath}/assets/js/flot/jquery.flot.resize.min.js"></script>
 
 <!-- ace scripts -->
-<script src="/assets/js/ace-elements.min.js"></script>
-<script src="/assets/js/ace.min.js"></script>
+<script src="${request.contextPath}/assets/js/ace-elements.min.js"></script>
+<script src="${request.contextPath}/assets/js/ace.min.js"></script>
 
 <script>
 
@@ -242,6 +250,20 @@
             );
         });
     });
+
+    function logout(){
+        $.ajax({
+            async : false,
+            cache: false,
+            type: 'POST',
+            url: '${request.contextPath}/sys/admin/logout',//请求的action路径
+            success:function(result){ //请求成功后处理函数。
+                if(result.rect) {
+                    window.location.href="${request.contextPath}/sys/admin/showLogin";
+                }
+            }
+        });
+    }
 </script>
 </body>
 </html>

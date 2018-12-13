@@ -76,6 +76,7 @@ public class TreeUtils {
      */
     public static List<SysDeptDto> findAll(List<SysDept> deptList){
 
+
         //Multimap相当于Map<String,List>,以层级为key，deptlist为value
         Multimap<String,SysDeptDto>  deptLevelMap= ArrayListMultimap.create();
         List<SysDeptDto> sysDeptDtoList = Lists.newArrayList();
@@ -159,6 +160,8 @@ public class TreeUtils {
             //递归调用
             deptTree(currentLevelDeptList,currentLevel,  levelMap);
         }
+
+
     }
 
 }

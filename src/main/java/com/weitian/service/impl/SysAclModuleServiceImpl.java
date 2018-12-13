@@ -16,6 +16,9 @@ import com.weitian.utils.LevelUtil;
 import com.weitian.utils.SysUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +31,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
+@CacheConfig(cacheNames = "SysAclModuleServiceImpl")
 public class SysAclModuleServiceImpl implements SysAclModuleService {
     @Autowired
     private SysAclModuleRepository moduleRepository;
@@ -40,6 +44,7 @@ public class SysAclModuleServiceImpl implements SysAclModuleService {
      * @param id
      */
     @Override
+    @CacheEvict(allEntries = true)
     public void delete(Integer id) {
         SysAclModule sysAclModule=moduleRepository.findOne( id );
         String oldValue=SysUtils.getJsonByObject( sysAclModule );
@@ -73,6 +78,7 @@ public class SysAclModuleServiceImpl implements SysAclModuleService {
      */
     @Override
     @Transactional
+    @CacheEvict(allEntries = true)
     public SysAclModule update(SysAclModuleDto sysAclModuleDto) {
         SysAclModule oldAclModule=moduleRepository.findOne( sysAclModuleDto.getId() );
         String oldValue=SysUtils.getJsonByObject( oldAclModule );
@@ -106,6 +112,7 @@ public class SysAclModuleServiceImpl implements SysAclModuleService {
      */
     @Override
     @Transactional
+    @CacheEvict(allEntries = true)
     public SysAclModule save(SysAclModuleDto sysAclModuleDto) {
         //父模块不存在则设置为0
         if(null==sysAclModuleDto.getParentId()){
@@ -141,6 +148,7 @@ public class SysAclModuleServiceImpl implements SysAclModuleService {
      * @return
      */
     @Override
+    @Cacheable
     public SysAclModule findByParentIdAndName(Integer parentId, String name) {
         return moduleRepository.findByParentIdAndName( parentId,name );
     }
@@ -151,6 +159,7 @@ public class SysAclModuleServiceImpl implements SysAclModuleService {
      * @return
      */
     @Override
+    @Cacheable
     public List<SysAclModule> findByParentId(Integer parentId) {
         return moduleRepository.findByParentId( parentId );
     }
@@ -160,6 +169,7 @@ public class SysAclModuleServiceImpl implements SysAclModuleService {
      * @return
      */
     @Override
+    @Cacheable
     public List<SysAclModule> findAllAclModule() {
 
         List<Sort.Order> orders=new ArrayList< Sort.Order>();
@@ -171,6 +181,7 @@ public class SysAclModuleServiceImpl implements SysAclModuleService {
     }
 
     @Override
+    @Cacheable
     public SysAclModule findOne(Integer id) {
         return moduleRepository.findOne( id );
     }

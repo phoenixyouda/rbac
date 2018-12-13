@@ -11,6 +11,9 @@ import com.weitian.service.SysLogService;
 import com.weitian.service.SysRoleUserService;
 import com.weitian.utils.SysUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -22,6 +25,7 @@ import java.util.List;
  * Created by Administrator on 2018/12/3.
  */
 @Service
+@CacheConfig(cacheNames = "SysRoleUserServiceImpl")
 public class SysRoleUserServiceImpl implements SysRoleUserService {
 
 
@@ -32,6 +36,7 @@ public class SysRoleUserServiceImpl implements SysRoleUserService {
     private SysLogService logService;
 
     @Override
+    @Cacheable
     public List<SysRoleUser> findByRoleId(Integer roleId) {
         return roleUserRepository.findByRoleId( roleId );
     }
@@ -44,6 +49,7 @@ public class SysRoleUserServiceImpl implements SysRoleUserService {
      */
     @Override
     @Transactional
+    @CacheEvict(allEntries = true)
     public void save(Integer roleId, List<String> userIds) {
         if(null==roleId){
             return;
@@ -76,6 +82,7 @@ public class SysRoleUserServiceImpl implements SysRoleUserService {
      */
     @Override
     @Transactional
+    @CacheEvict(allEntries = true)
     public void deleteByRoleId(Integer roleId) {
         if(null==roleId){
             return;
@@ -98,6 +105,7 @@ public class SysRoleUserServiceImpl implements SysRoleUserService {
      * @param userId
      */
     @Override
+    @CacheEvict(allEntries = true)
     public void deleteByUserId(Integer userId) {
         roleUserRepository.deleteByUserId( userId );
     }
@@ -108,6 +116,7 @@ public class SysRoleUserServiceImpl implements SysRoleUserService {
      * @return
      */
     @Override
+    @Cacheable
     public List<SysRoleUser> findByUserId(Integer userId) {
         return roleUserRepository.findByUserId( userId );
     }
